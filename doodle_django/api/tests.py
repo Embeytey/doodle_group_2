@@ -1,10 +1,11 @@
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-from django.urls import reverse
-from django.contrib.auth import get_user_model
-from rest_framework.authtoken.models import Token
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils.timezone import datetime, timedelta
+from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 
 from .models import *
@@ -161,3 +162,34 @@ class VoteViewSetTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class FeedbackViewSetTestCase(APITestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(username='testuser', password='testpassword')
+        self.valid_payload = {
+            'name': 'Test Name',
+            'message': 'Test message',
+            'email': 'test@example.com',
+            'user': self.user.id
+        }
+        self.invalid_payload = {
+            'name': 'Test Name',
+            'message': 'Test message',
+            'email': 'invalid_email',  # Invalid email format
+            'user': self.user.id
+        }
+
+    def test_create_feedback_with_attachment_success(self):
+        temp_file = SimpleUploadedFile("test_file.txt", b"file_content")
+        files = {'file': temp_file}
+        url = reverse('api:feedback-list')
+        response = self.client.post(url, self.valid_payload, format='multipart', files=files)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_feedback_with_attachment_invalid_data(self):
+        temp_file = SimpleUploadedFile("test_file.txt", b"file_content")
+        files = {'file': temp_file}
+        url = reverse('api:feedback-list')
+        response = self.client.post(url, self.invalid_payload, format='multipart', files=files)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
