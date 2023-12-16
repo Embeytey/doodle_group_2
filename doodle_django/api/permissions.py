@@ -46,6 +46,7 @@ class VotePermissions(BasePermission):
             return False
 
         meeting = schedule_poll.meeting
+
         if request.user and request.user == meeting.user:
             return True
         if meeting.passcode == passcode:

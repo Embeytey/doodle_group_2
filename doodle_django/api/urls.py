@@ -13,11 +13,11 @@ from .views import (
 )
 
 router = DefaultRouter()
-router.register(r'meetings', MeetingViewSet)
-router.register(r'votes', VoteViewSet)
-router.register(r'feedbacks', FeedbackViewSet)
+router.register(r'meetings', MeetingViewSet, basename='meeting')
+router.register(r'votes', VoteViewSet, basename='vote')
+router.register(r'feedbacks', FeedbackViewSet, basename='feedback')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('link/<str:token>/', api_link, name="api_link")
+    path('link/<str:token>/', api_link, name="api_link"),
 ]

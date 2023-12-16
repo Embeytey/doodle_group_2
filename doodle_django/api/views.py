@@ -29,7 +29,7 @@ class MeetingViewSet(viewsets.ModelViewSet):
             return Response({'error': 'No time slots provided.'}, status=status.HTTP_400_BAD_REQUEST)
 
         meeting_data = {
-            'user': user,
+            'user': user.pk,
             'video_conferencing': request.data.get('video_conferencing', False),
             'title': request.data.get('title', None),
             'description': request.data.get('description', None),
@@ -126,7 +126,7 @@ class VoteViewSet(viewsets.ModelViewSet):
         schedule_poll_id = request.data.get('schedule_poll_id')
         user_nickname = request.data.get('user_nickname')
         user = request.user if request.user.is_authenticated else None
-
+        
         if not schedule_poll_id:
             return Response({'error': 'Schedule Poll ID is required'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -150,7 +150,7 @@ class VoteViewSet(viewsets.ModelViewSet):
             time_slot_instance.schedule_poll = schedule_poll_instance
             time_slot_instance.save()
 
-        vote_serializer = VoteSerializer(data={'user': user, 'preference': preference_instance.id, 'user_nickname': user_nickname, 'time_slot': time_slot_instance.id})
+        vote_serializer = VoteSerializer(data={'user': user.pk, 'preference': preference_instance.id, 'user_nickname': user_nickname, 'time_slot': time_slot_instance.id})
         if vote_serializer.is_valid():
             vote_instance = vote_serializer.save()
             return Response(VoteReturnSerializer(vote_instance).data, status=status.HTTP_201_CREATED)
