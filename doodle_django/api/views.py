@@ -165,7 +165,6 @@ def api_feedback_create(request):
     if serializer.is_valid():
         feedback = serializer.save()
         for file in request.FILES.values():
-            print(file)
             FeedbackAttachment.objects.create(
                 feedback_id=feedback,
                 file=file

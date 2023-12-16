@@ -186,11 +186,7 @@ const CreateGroupPolly = ({ news }) => {
       timeslots: array_time_slots,
     };
     try {
-      await axios.post("http://127.0.0.1:8000/api/meetings/new/", data, {
-        headers: {
-          authorization: `Token ${getToken()}`,
-        },
-      });
+      await axios.post("http://127.0.0.1:8000/api/meetings/new/", data);
       // alert("Meeting Created successfully!");
       navigate("/manage");
       deleteFields();
