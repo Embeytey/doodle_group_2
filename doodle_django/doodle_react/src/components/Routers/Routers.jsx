@@ -20,7 +20,6 @@ import Preference from "../../pages/Preference";
 import Register from "../Login/Regsiter";
 import Login from "../Login/Login";
 import Logout from "../Login/Logout";
-import Feedback from "../../pages/Feedback";
 import User from "../../pages/User";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -62,7 +61,6 @@ function
         <Route path="/manage" element={<Manage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/preference" element={<Preference />} />
-        <Route path="/feedback" element={<Feedback />} />
         <Route path="/user" element={<User />} />
         <Route path="*" element={<p>There's nothing here: 404!</p>} />
       </Routes>
