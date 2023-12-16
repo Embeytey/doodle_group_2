@@ -10,7 +10,7 @@ COPY requirements.txt .
 COPY .docker/start_script.sh .
 
 # install needed dependencies
-RUN apk upgrade && \
+RUN apk update && \
     apk add npm py3-pip && \
     python -m ensurepip && \
     pip install --upgrade pip setuptools && \
