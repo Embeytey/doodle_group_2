@@ -130,12 +130,13 @@ class Vote(models.Model):
         primary_key=True,
         db_column="id"
     )
-    preference = models.CharField(
-        db_column="preference",
-        max_length=100
+    preference = models.ForeignKey(
+        Preference,
+        db_column="preference_id",
+        on_delete=models.CASCADE
     )
     time_slot = models.ForeignKey(
-        db_column="time_slot",
+        db_column="time_slot_id",
         to=TimeSlot,
         on_delete=models.CASCADE
     )
