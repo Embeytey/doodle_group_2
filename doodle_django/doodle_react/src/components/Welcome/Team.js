@@ -9,7 +9,7 @@ import Grid from "@mui/material/Grid";
 const Team = () => {
   return (
     <div style={{ marginRight: 20, marginLeft: 20, textAlign: "center" }}>
-      <div className="team">
+      <div class="team">
         <h3>Our Team</h3>
         <hr />
         <p
@@ -31,10 +31,10 @@ const Team = () => {
             <a
               href="https://github.com/Degephomk"
               target="_blank"
-              className="team-detail">
-              <img src={dege} className="img-fluid" />
-              <div className="overlay">
-                <div className="team-name">
+              class="team-detail">
+              <img src={dege} class="img-fluid" />
+              <div class="overlay">
+                <div class="team-name">
                   <h4>Degefom Kahsay Berhe</h4>
                   <p>Team Developer</p>
                 </div>
@@ -48,10 +48,10 @@ const Team = () => {
             <a
               href="https://github.com/Fappio97"
               target="_blank"
-              className="team-detail">
-              <img src={fabio} className="img-fluid" />
-              <div className="overlay">
-                <div className="team-name">
+              class="team-detail">
+              <img src={fabio} class="img-fluid" />
+              <div class="overlay">
+                <div class="team-name">
                   <h4>Fabio Cangeri</h4>
                   <p>Scrum Master</p>
                 </div>
@@ -65,10 +65,10 @@ const Team = () => {
             <a
               href="https://github.com/Embeytey"
               target="_blank"
-              className="team-detail">
-              <img src={hila} className="img-fluid" />
-              <div className="overlay">
-                <div className="team-name">
+              class="team-detail">
+              <img src={hila} class="img-fluid" />
+              <div class="overlay">
+                <div class="team-name">
                   <h4>Hilary Tesfay Gebreslassie</h4>
                   <p>Team Developer</p>
                 </div>
@@ -85,10 +85,10 @@ const Team = () => {
             <a
               href="https://github.com/tsion-19"
               target="_blank"
-              className="team-detail">
-              <img src={tsion} className="img-fluid" />
-              <div className="overlay">
-                <div className="team-name">
+              class="team-detail">
+              <img src={tsion} class="img-fluid" />
+              <div class="overlay">
+                <div class="team-name">
                   <h4>Tsion Gebreegziabher Ebuy</h4>
                   <p style={{ marginBlockStart: "0.5em" }}>Team Developer</p>
                 </div>
@@ -102,10 +102,10 @@ const Team = () => {
             <a
               href="https://github.com/uhth"
               target="_blank"
-              className="team-detail">
-              <img src={vincenzo} className="img-fluid" />
-              <div className="overlay">
-                <div className="team-name">
+              class="team-detail">
+              <img src={vincenzo} class="img-fluid" />
+              <div class="overlay">
+                <div class="team-name">
                   <h4>Vincenzo Rizzo</h4>
                   <p>Product Owner</p>
                 </div>

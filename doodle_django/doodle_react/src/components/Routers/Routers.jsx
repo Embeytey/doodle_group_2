@@ -17,24 +17,17 @@ import Creation from "../../pages/Creation";
 import Manage from "../../pages/Manage";
 import Dashboard from "../../pages/Dashboard";
 import Preference from "../../pages/Preference";
-import Register from "../../pages/Regsiter";
-import Login from "../../pages/Login";
+import Register from "../Login/Regsiter";
+import Login from "../Login/Login";
+import Logout from "../Login/Logout";
 import Feedback from "../../pages/Feedback";
 import User from "../../pages/User";
 import ProtectedRoute from "./ProtectedRoute";
-import Logout from "../../pages/Logout";
+
 
 function
   Routers() {
-  const user = sessionStorage.getItem("user");
-  // if (
-  //   !token &&
-  //   location.pathname !== "/" &&
-  //   location.pathname !== "/login" &&
-  //   !location.pathname.includes("/register")
-  // ) {
-  //   return <Navigate to="/login" replace />;
-  // }
+  const token = sessionStorage.getItem("token");
 
   return (
     <div>
@@ -44,7 +37,7 @@ function
         <Route
           path="/login"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={!user}>
+            <ProtectedRoute redirectPath="/" isAllowed={!token}>
               <Login />
             </ProtectedRoute>
           }
@@ -52,7 +45,7 @@ function
         <Route
           path="/register"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={!user}>
+            <ProtectedRoute redirectPath="/" isAllowed={!token}>
               <Register />
             </ProtectedRoute>
           }
@@ -60,7 +53,7 @@ function
         <Route
           path="/logout"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={!!user}>
+            <ProtectedRoute redirectPath="/" isAllowed={!!token}>
               <Logout />
             </ProtectedRoute>
           }

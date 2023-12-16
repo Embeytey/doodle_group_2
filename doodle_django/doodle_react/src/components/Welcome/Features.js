@@ -16,7 +16,7 @@ const Features = () => {
         backgroundColor: "#d1c3bb",
         borderRadius: "10px",
       }}>
-      <div className="features">
+      <div class="features">
         <h3 style={{ paddingTop: 20 }}>Features</h3>
         <hr />
         <p
@@ -40,10 +40,10 @@ const Features = () => {
               item
               xs={4}
               style={{ marginTop: "auto", marginBottom: "auto" }}>
-              <div className="feature_image_div">
+              <div class="feature_image_div">
                 <img
                   id="feature"
-                  className="feature_image_details"
+                  class="feature_image_details"
                   src={clock}
                   alt="feature"
                 />
@@ -58,10 +58,10 @@ const Features = () => {
               item
               xs={4}
               style={{ marginTop: "auto", marginBottom: "auto" }}>
-              <div className="feature_image_div">
+              <div class="feature_image_div">
                 <img
                   id="feature"
-                  className="feature_image_details"
+                  class="feature_image_details"
                   src={easy}
                   alt="feature"
                 />
@@ -70,7 +70,7 @@ const Features = () => {
           </Grid>
         </Grid>
         <Grid item xs={4}>
-          <img id="system" className="feature_image" src={system} alt="system" />
+          <img id="system" class="feature_image" src={system} alt="system" />
         </Grid>
         <Grid item xs={2}>
           <Grid container spacing={2} style={{ marginTop: 55 }}>
@@ -78,10 +78,10 @@ const Features = () => {
               item
               xs={4}
               style={{ marginTop: "auto", marginBottom: "auto" }}>
-              <div className="feature_image_div">
+              <div class="feature_image_div">
                 <img
                   id="feature"
-                  className="feature_image_details"
+                  class="feature_image_details"
                   src={group}
                   alt="feature"
                 />
@@ -96,10 +96,10 @@ const Features = () => {
               item
               xs={4}
               style={{ marginTop: "auto", marginBottom: "auto" }}>
-              <div className="feature_image_div">
+              <div class="feature_image_div">
                 <img
                   id="feature"
-                  className="feature_image_details"
+                  class="feature_image_details"
                   src={scrum}
                   alt="feature"
                 />

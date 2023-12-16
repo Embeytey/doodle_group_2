@@ -1,0 +1,32 @@
+.login {
+  /* background: url(../../public/time.jpg); */
+  margin-top: 120px;
+  margin-left: 400px;
+  margin-right: 400px;
+  box-shadow: 7px 2px 20px -7px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 7px 2px 20px -7px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 7px 2px 20px -7px rgba(0, 0, 0, 0.75);
+  background-color: #d1c3bb;
+}
+
+.login .h2 {
+  color: black;
+}
+
+.login .Button {
+  background-color: #d1c3bb;
+}
+
+@media (max-width: 600px) {
+  .login {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
+@media (max-width: 400px) {
+  .login {
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+}

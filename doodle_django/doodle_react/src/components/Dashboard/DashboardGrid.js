@@ -1,6 +1,6 @@
 import Grid from "@mui/material/Grid";
 import MeetingsCreation from "./MeetingsCreation";
-import Sidebar from "../../pages/Sidebar";
+import Sidebar from "../Sidebar/Sidebar";
 
 const DashboardGrid = ({ data }) => {
   return (

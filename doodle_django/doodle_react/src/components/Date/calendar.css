@@ -1,4 +1,4 @@
-.custom-time-picker {
+/* .custom-time-picker {
   width: 200px;
   font-size: 16px;
 }
@@ -11,4 +11,26 @@
 }
 .calendar {
   width: 800px !important;
+} */
+
+
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .calendar-container {
+    flex-direction: row;
+  }
+
+  .calendar-section {
+    flex: 1;
+    margin-right: 20px;
+  }
+
+  .selected-dates-section {
+    flex: 1;
+  }
 }

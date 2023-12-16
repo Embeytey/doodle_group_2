@@ -5,8 +5,6 @@ import "./App.css";
 
 function App() {
   //axios defaults
-  axios.defaults.headers.common['Content-Type'] = "multipart/form-data";
-
 
   return (
     <div className="App">

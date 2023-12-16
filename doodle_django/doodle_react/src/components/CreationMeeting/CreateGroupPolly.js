@@ -242,52 +242,58 @@ const CreateGroupPolly = ({ news }) => {
           </div>
           <div className="field">
             <div style={{ display: "flex" }}>
-              <div style={{ flex: 1 }}>
-                <h1>Add time</h1>
-                <Calendar
-                  onClickDay={(value) => handleDateClick(value)}
-                  value={selectedDates.map((dateObj) => dateObj.date)}
-                  tileDisabled={tileDisabled}
-                />
-              </div>
-              <div style={{ flex: 1, marginLeft: 20 }}>
-                <h2>Selected Dates:</h2>
-                {selectedDates.length > 0 ? (
-                  <ul>
-                    {selectedDates.map((dateObj, index) => (
-                      <li key={index}>
-                        {dateObj.date.toDateString()} from{" "}
-                        {dateObj.timeRange[0]} to {dateObj.timeRange[1]}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div>
-                    {!errorDate && (
-                      <p className="no_error">No dates selected</p>
-                    )}
-                    {errorDate && <p className="error">No dates selected</p>}
+              <div className="container">
+                <div className="calendar-section">
+                  <div style={{ flex: 1 }}>
+                    <h1>Add time</h1>
                   </div>
-                )}
-                <div>
-                  <h2>Select Time Range:</h2>
+                  <Calendar
+                    onClickDay={(value) => handleDateClick(value)}
+                    value={selectedDates.map((dateObj) => dateObj.date)}
+                    tileDisabled={tileDisabled}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h2>Selected Dates:</h2>
+                  {selectedDates.length > 0 ? (
+                    <ul>
+                      {selectedDates.map((dateObj, index) => (
+                        <li key={index}>
+                          {dateObj.date.toDateString()} from{" "}
+                          {dateObj.timeRange[0]} to {dateObj.timeRange[1]}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div>
+                      {!errorDate && (
+                        <p className="no_error">No dates selected</p>
+                      )}
+                      {errorDate && <p className="error">No dates selected</p>}
+                    </div>
+                  )}
                   <div>
-                    <TimePicker
-                      style={{ color: "#757575" }}
-                      onChange={(time) => handleTimeChange(time, 0)}
-                      value={selectedTimeRange[0]}
-                      className="custom-time-picker"
-                    />
-                    <p>Start Time: {selectedTimeRange[0]}</p>
-                  </div>
-                  <div>
-                    <TimePicker
-                      style={{ color: "#757575" }}
-                      onChange={(time) => handleTimeChange(time, 1)}
-                      value={selectedTimeRange[1]}
-                      className="custom-time-picker"
-                    />
-                    <p>End Time: {selectedTimeRange[1]}</p>
+                    <div div className="time-range-section">
+                      <h2>Select Time Range:</h2>
+                    </div>
+                    <div>
+                      <TimePicker
+                        style={{ color: "#757575" }}
+                        onChange={(time) => handleTimeChange(time, 0)}
+                        value={selectedTimeRange[0]}
+                        className="custom-time-picker"
+                      />
+                      <p>Start Time: {selectedTimeRange[0]}</p>
+                    </div>
+                    <div>
+                      <TimePicker
+                        style={{ color: "#757575" }}
+                        onChange={(time) => handleTimeChange(time, 1)}
+                        value={selectedTimeRange[1]}
+                        className="custom-time-picker"
+                      />
+                      <p>End Time: {selectedTimeRange[1]}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -298,7 +304,8 @@ const CreateGroupPolly = ({ news }) => {
                 marginBottom: 20,
                 marginRight: 20,
                 marginTop: 20,
-              }}>
+              }}
+            >
               <PrimaryButton
                 text={"Create Invate and Continue"}
                 functionOnClick={handleButtonClick}

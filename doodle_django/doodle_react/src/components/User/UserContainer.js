@@ -8,7 +8,6 @@ import "../ManageMeeting/manage.css";
 import UserPreference from "../User/UserPreference";
 import News from "../CreationMeeting/News";
 import TableMeetingUser from "../User/TableMeetingUser";
-import VotedPage from './VotedPage';
 import Button from "@mui/material/Button";
 import { grey } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
@@ -77,7 +76,8 @@ const [submitsucess,setSubmitSucess]=useState(false)
                   selectedDates={selectedDates}
                   setSelectedDates={setSelectedDates}
                 />}
-                {submitsucess && <VotedPage/>}
+                {submitsucess && <h2>Your vote has been counted successfully!</h2>
+}
               </Box>
               <div style={{ textAlign: "end" }}>
                 {/* Use the handleSubmit function from props */}

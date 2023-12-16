@@ -182,12 +182,6 @@ def api_feedback_detail(request, feedback_id):
 
 
 @api_view(['GET'])
-def api_feedback_detail(request, feedback_id):
-    feedback = Feedback.objects.filter(pk=feedback_id)
-    if feedback is not None:
-        return Response(status=status.HTTP_200_OK, data=FeedbackSerializer(feedback).data)
-
-@api_view(['GET'])
 def api_feedbacks(request):
     feedback = Feedback.objects.all()
     if feedback is not None:

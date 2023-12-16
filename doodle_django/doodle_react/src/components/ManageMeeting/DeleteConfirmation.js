@@ -10,6 +10,11 @@ const ConfirmationBox = styled("div")({
   boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
   textAlign: "center",
   margin: "0 auto", // Center the box horizontally
+  position: "fixed", // Set the position to fixed
+  top: "50%", // Center vertically
+  left: "50%", // Center horizontally
+  transform: "translate(-50%, -50%)", // Center the box both vertically and horizontally
+  zIndex: 1000, // Adjust the z-index as needed to ensure it appears above other elements
 });
 
 const DeleteButton = styled(Button)(({ theme }) => ({
@@ -34,11 +39,13 @@ const DeleteConfirmation = ({ show, onCancel, onConfirm, meetingTitle }) => {
   if (!show) {
     return null;
   }
- 
+
   return (
     <ConfirmationBox>
-     <p><h2>Delete Permanently?</h2></p>
-     <p>{`Deleting "${meetingTitle}"will remove it permanently.`}</p>
+      <p>
+        <h2>Delete Permanently?</h2>
+      </p>
+      <p>{`Deleting "${meetingTitle}" will remove it permanently.`}</p>
       <div>
         <DeleteButton onClick={onCancel} variant="contained">
           Cancel
@@ -52,4 +59,3 @@ const DeleteConfirmation = ({ show, onCancel, onConfirm, meetingTitle }) => {
 };
 
 export default DeleteConfirmation;
-

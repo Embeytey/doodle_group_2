@@ -4,7 +4,7 @@ import { Avatar } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 
-import Sidebar from "../../pages/Sidebar";
+import Sidebar from "../Sidebar/Sidebar";
 import CardContent from "@mui/material/CardContent";
 import { red } from "@mui/material/colors";
 import { Grid, styled, Paper } from "@mui/material/";

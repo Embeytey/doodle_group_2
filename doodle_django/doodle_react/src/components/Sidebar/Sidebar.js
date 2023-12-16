@@ -1,12 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { FaBars } from "react-icons/fa";
-import { MdMessage } from "react-icons/md";
-import { BiAnalyse, BiSearch } from "react-icons/bi";
+import { MdOutlineManageHistory } from "react-icons/md";
 import { MdReviews, MdNotificationsActive } from "react-icons/md";
 import { AiFillHome } from "react-icons/ai";
+import { MdOutlineCreate } from "react-icons/md";
 import { BiLogOutCircle } from "react-icons/bi";
-import { BsCurrencyBitcoin, BsShopWindow, BsCart4 } from "react-icons/bs";
+import { BsShopWindow, BsCart4 } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import LeftMenu from "./LeftMenu";
@@ -27,7 +27,7 @@ let Links = [
   {
     name: "create",
     path: "/create",
-    icon: <BsCurrencyBitcoin />,
+    icon: <MdOutlineCreate />,
   },
   {
     name: "Feedback",
@@ -38,11 +38,11 @@ let Links = [
   {
     name: "Manage",
     path: "/Manage",
-    icon: <BsCart4 />,
+    icon: <MdOutlineManageHistory />,
   },
   {
-    name: "My Notification",
-    path: "/notification",
+    name: "My Preference",
+    path: "/user",
     icon: <MdNotificationsActive />,
   },
 ];

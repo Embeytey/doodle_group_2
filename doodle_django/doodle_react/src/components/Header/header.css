@@ -7,11 +7,14 @@
   left: 0;
   z-index: 111111;
   background-image: url(../../../public/time.jpg);
+  background-size: cover;
+  border-bottom: 1px solid #827066;
 }
 
 .header__shrink {
-  background: #8e9672b6;
-  box-shadow: 2px 2px 4px -2px #50e58e1f;
+  background-color: #ae9f97;
+  border-bottom: 1px solid #827066;
+  opacity: 0.92;
 }
 
 .image {
@@ -24,13 +27,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 20px;
 }
 
 .nav__list {
+  margin-left: 250px;
   display: flex;
   margin-left: 500px;
   align-items: end;
-  column-gap: 3rem;
+  column-gap: 1rem;
+}
+
+.nav__item {
+  margin-right: 15px;
 }
 
 .nav__item a {
@@ -47,7 +56,7 @@
 }
 
 .logo h2 {
-  background: linear-gradient(-45deg, #e63617f3, #38e241be, #31e4669a, #2e34e4);
+  background: linear-gradient(-45deg, #61634e, #465d5fbe, #5a3f3f9a, #cc2020);
   background-size: 100% 100%;
   background-clip: text;
   -webkit-text-stroke: 3px transparent;
@@ -55,7 +64,7 @@
 }
 
 .nav__right .btn {
-  padding: 7px 25px;
+  padding: 7px 15px;
   background-color: rgba(199, 188, 158, 0.856);
   border: 1px solid #5142fc;
   border-radius: 50px;
@@ -82,10 +91,19 @@
 }
 
 @media only screen and (max-width: 768px) {
+  .nav__list {
+    display: none;
+  }
+
+  .mobile__menu {
+    display: block;
+    margin-right: 20px;
+  }
+
   .nav__menu {
     position: fixed;
     top: 0;
-    margin-right: 20px;
+    right: 0;
     width: 100%;
     height: 100%;
     background: linear-gradient(#5e81af6c, #5c8d8b83);
@@ -96,24 +114,26 @@
   .active__menu {
     display: block;
   }
+
   .nav__list {
     position: absolute;
-    top: 0;
-    margin-left: 200px;
-    width: 250px;
-    height: 100%;
+    top: 70px;
+    right: 0;
+    width: 100%;
     background: #343444;
     z-index: 333333;
     flex-direction: column;
     padding-top: 40px;
   }
 
-  .mobile__menu {
-    display: block;
+  .nav__right {
+    display: flex;
+    align-items: center;
+    padding: 20px;
   }
 
   .btn {
-    padding: 4px 25px !important;
+    padding: 4px 10px !important;
   }
 
   .btn a {
