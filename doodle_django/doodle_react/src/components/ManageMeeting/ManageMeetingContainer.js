@@ -67,6 +67,7 @@ const ManageMeetingContainer = ({ data }) => {
             <div className="field">
               <TableMeeting
                 data={data}
+                style={{paddingTop: '10vh'}}
                 selectedColumn={selectedColumn}
                 columnSelection={columnSelection}
               />
@@ -74,6 +75,7 @@ const ManageMeetingContainer = ({ data }) => {
                 style={{
                   marginRight: 20,
                   paddingBottom: 20,
+                  paddingTop: 20,
                   textAlign: "end",
                 }}>
                 <PrimaryButton

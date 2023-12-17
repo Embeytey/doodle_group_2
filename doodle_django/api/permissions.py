@@ -9,7 +9,7 @@ from .models import *
 class MeetingPermissions(BasePermission):
     def has_permission(self, request, view):
         if view.action == 'list':
-            return request.user and request.user.is_superuser
+            return request.user and request.user.is_authenticated
         return True
 
 
@@ -62,8 +62,7 @@ class VotePermissions(BasePermission):
 
         schedule_poll_link_query = Q(schedule_poll=schedule_poll) if schedule_poll is not None else Q(token=link_token)
         schedule_poll_link = SchedulePollLink.objects.filter(schedule_poll_link_query)
-        if schedule_poll_link.exists():
-            return True
+        return schedule_poll_link.exists()
 
         meeting = schedule_poll.meeting
 

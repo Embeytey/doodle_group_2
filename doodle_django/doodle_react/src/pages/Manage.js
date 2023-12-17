@@ -7,26 +7,22 @@ const Manage = () => {
 
   const {meetingId} = useParams();
 
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
 
-  const getMeeting = async () => {
-    try {
-      const passcode = JSON.parse(localStorage.getItem("created_meeting")).passcode;
-      let url = `http://127.0.0.1:8000/api/meetings/${meetingId}/`;
-      const meetingResponse = await axios.get(url, {params: {"passcode": passcode}});
-      setData(meetingResponse.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
-    getMeeting();
+    const passcode = JSON.parse(localStorage.getItem("created_meeting")).passcode;
+    let url = `http://127.0.0.1:8000/api/meetings/${meetingId}/`;
+    axios.get(url, {params: {"passcode": passcode}}).then((response) => {
+      setData(response.data);
+    }).catch(error => {
+      console.log(error);
+    })
   }, []);
 
   return (
     <div>
-      <ManageMeetingContainer data={data} />
+      {data && <ManageMeetingContainer data={data} />}
     </div>
   );
 };
