@@ -20,6 +20,7 @@ const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const trigger = useScrollTrigger();
   const location = useLocation();
+  console.log("getUserInfo().username", getUserInfo().user);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -97,24 +98,24 @@ const Navbar = () => {
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}>
           {isUserAuthenticated() ? (
-            <MenuItem onClick={handleMenuClose}>
+            <MenuItem key="logout" onClick={handleMenuClose}>
               <Link to="/logout" style={linkStyle}>
                 Logout
               </Link>
             </MenuItem>
           ) : (
-            <>
-              <MenuItem onClick={handleMenuClose}>
+            [
+              <MenuItem key="login" onClick={handleMenuClose}>
                 <Link to="/login" style={linkStyle}>
                   Login
                 </Link>
-              </MenuItem>
-              <MenuItem onClick={handleMenuClose}>
+              </MenuItem>,
+              <MenuItem key="register" onClick={handleMenuClose}>
                 <Link to="/register" style={linkStyle}>
                   Registration
                 </Link>
-              </MenuItem>
-            </>
+              </MenuItem>,
+            ]
           )}
         </Menu>
       </Toolbar>

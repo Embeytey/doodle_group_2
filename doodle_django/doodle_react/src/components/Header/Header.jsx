@@ -34,15 +34,15 @@ const user = JSON.parse(sessionStorage.getItem("user"));
 
 const getUserInfo = () => {
   const user = JSON.parse(sessionStorage.getItem("user"));
-  if(!!user) {
-    return <div>
-              {user.username}
-              {user.email}
-            </div>;
-  }
-  else
-    return <div></div>;
-}
+  if (!!user) {
+    return (
+      <div>
+        {user.username}
+        {user.email}
+      </div>
+    );
+  } else return <div></div>;
+};
 
 const Header = () => {
   const navigationbuttonhadler = () => {
@@ -79,8 +79,7 @@ const Header = () => {
             <div className="logo">
               <h2
                 className=" d-flex gap-2 align-items-center "
-                style={{ color: "inherit", textDecoration: "inherit" }}
-              >
+                style={{ color: "inherit", textDecoration: "inherit" }}>
                 <img className="image" src={Unical} alt="unical" />
                 Doodle Meet
               </h2>
@@ -95,8 +94,7 @@ const Header = () => {
                     to={item.url}
                     className={(navClass) =>
                       navClass.isActive ? "active" : ""
-                    }
-                  >
+                    }>
                     {item.display}
                   </NavLink>
                 </li>
@@ -106,7 +104,7 @@ const Header = () => {
 
           <div className="nav__right d-flex align-items-center gap-5 ">
             <span className="mobile__menu">
-              <i class="ri-menu-line" onClick={toggleMenu}></i>
+              <i className="ri-menu-line" onClick={toggleMenu}></i>
             </span>
           </div>
         </div>

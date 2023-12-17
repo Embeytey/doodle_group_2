@@ -68,6 +68,7 @@ function Welcome() {
       <Team />
       <br />
       <Faq />
+      <br />
     </div>
   );
 }
