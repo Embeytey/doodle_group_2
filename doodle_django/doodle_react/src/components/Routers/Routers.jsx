@@ -1,18 +1,6 @@
-import "../../App.css";
-// import "./index.css";
-import Navbar from "../../pages/Navbar";
+import { Routes, Route } from "react-router-dom";
 import Welcome from "../../pages/Welcome";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import ReactDOM from "react-dom";
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-  Navigate,
-} from "react-router-dom";
 import Creation from "../../pages/Creation";
 import Manage from "../../pages/Manage";
 import Dashboard from "../../pages/Dashboard";
@@ -22,6 +10,8 @@ import Login from "../Login/Login";
 import Logout from "../Login/Logout";
 import User from "../../pages/User";
 import ProtectedRoute from "./ProtectedRoute";
+import "react-toastify/dist/ReactToastify.css";
+import "../../App.css";
 
 function Routers() {
   const token = sessionStorage.getItem("token");

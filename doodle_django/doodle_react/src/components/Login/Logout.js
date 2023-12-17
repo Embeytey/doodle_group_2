@@ -4,7 +4,6 @@ import { useEffect } from "react";
 
 const Logout = () => {
   useEffect(() => {
-    console.log("CIAOOOOOOOOOOOOOOOOOOOOoo");
     callLogout();
   }, []);
 
