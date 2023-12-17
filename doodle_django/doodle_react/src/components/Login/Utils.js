@@ -1,5 +1,6 @@
 const isUserAuthenticated = () => {
     const token = sessionStorage.getItem("token");
+    console.log("auth", !!token);
     return !!token;
 };
 
