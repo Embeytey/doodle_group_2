@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import {isUserAuthenticated, getUserInfo} from "../Login/Utils";
+import { isUserAuthenticated, getUserInfo } from "../Login/Utils";
 import unical from "../images/unical.png";
 import "../../index.css";
 
@@ -86,7 +86,11 @@ const Navbar = () => {
           aria-label="menu"
           onClick={handleMenuOpen}>
           <AccountCircleIcon style={{ marginRight: 3 }} />
-          {isUserAuthenticated() ? getUserInfo().username : <p style={{ margin: 0 }}>Guest</p>}
+          {isUserAuthenticated() ? (
+            getUserInfo().username
+          ) : (
+            <p style={{ margin: 0 }}>Guest</p>
+          )}
         </IconButton>
         <Menu
           anchorEl={anchorEl}

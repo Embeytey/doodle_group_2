@@ -65,7 +65,7 @@ const Login = () => {
         sessionStorage.setItem("token", response.data.key);
         axios.defaults.headers.common["Authorization"] =
           "Token " + sessionStorage.getItem("token");
-        const user_res = await axios.post(
+        const user_res = await axios.get(
           `http://127.0.0.1:8000/api/user-info/`
         );
         sessionStorage.setItem("user", JSON.stringify(user_res.data));

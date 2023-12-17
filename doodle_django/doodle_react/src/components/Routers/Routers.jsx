@@ -17,8 +17,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "../../App.css";
 
 function Routers() {
-  const token = sessionStorage.getItem("token");
-
   return (
     <div>
       <Routes>
@@ -26,7 +24,7 @@ function Routers() {
         <Route
           path="/login"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={isUserAuthenticated()}>
+            <ProtectedRoute redirectPath="/" isAllowed={!isUserAuthenticated()}>
               <Login />
             </ProtectedRoute>
           }
@@ -34,7 +32,7 @@ function Routers() {
         <Route
           path="/register"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={isUserAuthenticated()}>
+            <ProtectedRoute redirectPath="/" isAllowed={!isUserAuthenticated()}>
               <Register />
             </ProtectedRoute>
           }
@@ -42,7 +40,7 @@ function Routers() {
         <Route
           path="/logout"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={!isUserAuthenticated()}>
+            <ProtectedRoute redirectPath="/" isAllowed={isUserAuthenticated()}>
               <Logout />
             </ProtectedRoute>
           }
@@ -50,7 +48,7 @@ function Routers() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={!isUserAuthenticated()}>
+            <ProtectedRoute redirectPath="/" isAllowed={isUserAuthenticated()}>
               <Dashboard />
             </ProtectedRoute>
           }
