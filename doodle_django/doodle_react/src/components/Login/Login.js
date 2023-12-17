@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from './AuthProvider'; 
 import {
   Box,
   TextField,
@@ -17,9 +18,6 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
 import PrimaryButton from "../Utils/PrimaryButton.js";
 
-const headers = {
-  "Content-Type": "application/json",
-};
 
 const Login = () => {
   let navigate = useNavigate();
@@ -27,12 +25,12 @@ const Login = () => {
     username: "",
     password: "",
   });
-
+  
   const [error, setError] = useState({
     username: false,
     password: false,
   });
-
+  
   const checkRequirements = () => {
     let bool = true;
     if (data.username === "") {
@@ -51,24 +49,17 @@ const Login = () => {
     }
     return bool;
   };
+  
+  const { login } = useAuth();
 
   const handleSubmitLogin = async () => {
     if (checkRequirements()) {
       try {
         const response = await axios.post(
           `http://127.0.0.1:8000/api/auth/login/`,
-          data,
-          {
-            headers: headers,
-          }
+          data
         );
-        sessionStorage.setItem("token", response.data.key);
-        axios.defaults.headers.common["Authorization"] =
-          "Token " + sessionStorage.getItem("token");
-        const user_res = await axios.get(
-          `http://127.0.0.1:8000/api/user-info/`
-        );
-        sessionStorage.setItem("user", JSON.stringify(user_res.data));
+        login(response.data.key);
         navigate("/");
       } catch (error) {
         alert(error);

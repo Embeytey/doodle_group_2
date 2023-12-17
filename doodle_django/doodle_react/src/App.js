@@ -1,6 +1,6 @@
 import Layout from "./components/Layout/Layout";
 import axios from "axios";
-import Cookies from 'js-cookie';
+import { AuthProvider } from "./components/Login/AuthProvider";
 import "./index.css";
 import "./App.css";
 
@@ -9,9 +9,11 @@ function App() {
   axios.defaults.headers.common['withCredentials'] = true;
 
   return (
-    <div className="App">
-      <Layout />
-    </div>
+    <AuthProvider>
+      <div className="App">
+        <Layout />
+      </div>
+    </AuthProvider>
   );
 }
 
