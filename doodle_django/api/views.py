@@ -214,3 +214,20 @@ def api_link(request, token):
         return Response({'error': 'Link is not valid.'}, status=status.HTTP_404_NOT_FOUND)
     meeting_instance = link_instance.schedule_poll.meeting
     return redirect(f"http://localhost:8000/vote/{meeting_instance.pk}")
+
+
+@api_view(['POST'])
+def api_book(request, meeting_id):
+    passcode = request.data.pop("passcode", request.query_params.get("passcode"))
+    user = request.user if request.user.is_authenticated else None
+    try:
+        meeting = Meeting.objects.get(pk=meeting_id)
+    except Meeting.DoesNotExist:
+        return Response({'error': 'Meeting does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+    serializer = DateTimeSerializer(data=request.data)
+    if serializer.is_valid():
+        datetime_value = serializer.validated_data['datetime_field']
+        meeting.final_date = datetime_value
+        return Response({}, status=status.HTTP_200_OK)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -127,3 +127,6 @@ class VoteReturnSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
         return obj.user.username if obj.user else None
+
+class DateTimeSerializer(serializers.Serializer):
+    datetime_field = serializers.DateTimeField()

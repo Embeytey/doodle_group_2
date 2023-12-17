@@ -20,4 +20,5 @@ router.register(r'feedbacks', FeedbackViewSet, basename='feedback')
 urlpatterns = [
     path('', include(router.urls)),
     path('link/<str:token>/', api_link, name="api_link"),
+    path('book/<str:meeting_id>/', api_book, name='api_book'),
 ]
