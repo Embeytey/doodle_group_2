@@ -71,7 +71,7 @@ const FeedbackFormPage = ({ setFormVisibility }) => {
     if (file !== null) data.append(`file`, file, file.name);
 
     axios
-      .post("http://127.0.0.1:8000/api/feedbacks/new/", data, {
+      .post("http://127.0.0.1:8000/api/feedbacks/", data, {
         headers: {
           "Content-type": "multipart/form-data",
           withCredentials: true,

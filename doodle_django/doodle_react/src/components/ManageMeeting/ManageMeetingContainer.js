@@ -1,39 +1,33 @@
-import Grid from "@mui/material/Grid";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import ManageMeeting from "../ManageMeeting/ManageMeeting";
+import TableMeeting from "../ManageMeeting/TableMeeting";
+import PrimaryButton from "../Utils/PrimaryButton";
 import "../CreationMeeting/createGroup.css";
 import "../CreationMeeting/createGroupPolly.css";
 import "../ManageMeeting/manage.css";
-import ManageMeeting from "../ManageMeeting/ManageMeeting";
-import News from "../CreationMeeting/News";
-import TableMeeting from "../ManageMeeting/TableMeeting";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import PrimaryButton from "../Utils/PrimaryButton";
 
-const Manage = ({ news, data }) => {
-  const getToken = () => sessionStorage.getItem("token");
+const ManageMeetingContainer = ({ data }) => {
 
   const navigate = useNavigate();
 
   const submitForm = async () => {
-    let variable = null;
+    let timeslot_id = null;
+    //select timeslot
     if (selectedColumn !== undefined && selectedColumn !== "")
-      variable = data["timeslots"][selectedColumn - 1]["id"];
+      timeslot_id = data["timeslots"][selectedColumn - 1]["id"];
     else navigate("/dashboard");
     try {
       await axios.post(
         "http://127.0.0.1:8000/api/meeting/" + data["id"] + "/book/",
         {
-          final_date: variable,
+          final_date: timeslot_id,
         },
-        {
-          headers: {
-            authorization: `Token ${getToken()}`,
-          },
-        }
       );
-      // alert("Timeslot booked!");
+      alert("Timeslot booked!");
       navigate("/dashboard");
     } catch (e) {}
   };
@@ -100,4 +94,4 @@ const Manage = ({ news, data }) => {
   );
 };
 
-export default Manage;
+export default ManageMeetingContainer;

@@ -58,10 +58,10 @@ function
           }
         />
         <Route path="/create" element={<Creation />} />
-        <Route path="/manage" element={<Manage />} />
+        <Route path="/manage/:meetingId" element={<Manage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/preference" element={<Preference />} />
-        <Route path="/user" element={<User />} />
+        <Route path="/user/:uuid([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[4][0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12})" element={<User />} />
         <Route path="*" element={<p>There's nothing here: 404!</p>} />
       </Routes>
     </div>
