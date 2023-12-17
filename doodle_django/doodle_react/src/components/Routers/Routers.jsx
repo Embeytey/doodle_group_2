@@ -29,7 +29,6 @@ function Routers() {
 
   return (
     <div>
-      {/* <Navbar /> */}
       <Routes>
         <Route path="/" name="Home" element={<Welcome />} />
         <Route

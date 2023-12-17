@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -15,9 +15,10 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import unical from "../images/unical.png";
 import "../../index.css";
 
-const Navbar = ({ isAuthenticated, username }) => {
+const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const trigger = useScrollTrigger();
+  const location = useLocation();
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -31,6 +32,17 @@ const Navbar = ({ isAuthenticated, username }) => {
     textDecoration: "none",
     color: "inherit",
   };
+
+  const getUserInfo = () => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    return user ? user.username : null;
+  };
+
+  const isAuthenticated = () => {
+    return !!sessionStorage.getItem("token");
+  };
+
+  const username = getUserInfo();
 
   return (
     <AppBar
@@ -67,12 +79,16 @@ const Navbar = ({ isAuthenticated, username }) => {
           </Link>
         </Box>
         <Box sx={{ display: "flex", marginRight: 15 }}>
-          <Link to="/create">
-            <Button color="inherit">Create</Button>
-          </Link>
-          <Link to="/dashboard">
-            <Button color="inherit">Dashboard</Button>
-          </Link>
+          {location.pathname !== "/create" && (
+            <Link to="/create">
+              <Button color="inherit">Create</Button>
+            </Link>
+          )}
+          {location.pathname !== "/dashboard" && (
+            <Link to="/dashboard">
+              <Button color="inherit">Dashboard</Button>
+            </Link>
+          )}
         </Box>
         <IconButton
           edge="start"
@@ -80,7 +96,7 @@ const Navbar = ({ isAuthenticated, username }) => {
           aria-label="menu"
           onClick={handleMenuOpen}>
           <AccountCircleIcon style={{ marginRight: 3 }} />
-          {isAuthenticated ? { username } : <p style={{ margin: 0 }}>Guest</p>}
+          {isAuthenticated ? username : <p style={{ margin: 0 }}>Guest</p>}
         </IconButton>
         <Menu
           anchorEl={anchorEl}
