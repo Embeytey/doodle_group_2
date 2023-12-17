@@ -56,10 +56,10 @@ function Routers() {
           }
         />
         <Route path="/create" element={<Creation />} />
-        <Route path="/manage" element={<Manage />} />
+        <Route path="/manage/:meetingId" element={<Manage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/preference" element={<Preference />} />
-        <Route path="/user" element={<User />} />
+        <Route path="/user/:uuid" element={<User />} />
         <Route path="*" element={<p>There's nothing here: 404!</p>} />
       </Routes>
     </div>

@@ -37,7 +37,7 @@ const ManageMeeting = ({ data }) => {
   const handleConfirmDelete = async () => {
     try {
       // Perform the deletion logic immediately
-      let url = `http://127.0.0.1:8000/api/meetings/${data.id}/delete/`;
+      let url = `http://127.0.0.1:8000/api/meetings/${data.id}/`;
       await axios.delete(url);
   
       // Notify the user with a success message

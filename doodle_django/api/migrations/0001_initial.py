@@ -73,9 +73,9 @@ class Migration(migrations.Migration):
             name='Vote',
             fields=[
                 ('id', models.BigAutoField(db_column='id', primary_key=True, serialize=False)),
-                ('preference', models.CharField(db_column='preference', max_length=100)),
+                ('preference', models.ForeignKey(blank=True, db_column='preference_id', on_delete=django.db.models.deletion.CASCADE, to='api.preference')),
                 ('user_nickname', models.CharField(blank=True, db_column='user_nickname', max_length=20, null=True)),
-                ('time_slot', models.ForeignKey(db_column='time_slot', on_delete=django.db.models.deletion.CASCADE, to='api.timeslot')),
+                ('time_slot', models.ForeignKey(db_column='time_slot_id', on_delete=django.db.models.deletion.CASCADE, to='api.timeslot')),
                 ('user', models.ForeignKey(blank=True, db_column='user_id', null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),

@@ -1,29 +1,17 @@
-import Grid from "@mui/material/Grid";
 import { useState, useEffect } from "react";
+import axios from "axios";
+import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import UserPreference from "../User/UserPreference";
+import TableMeetingUser from "../User/TableMeetingUser";
 import "../CreationMeeting/createGroup.css";
 import "../CreationMeeting/createGroupPolly.css";
 import "../ManageMeeting/manage.css";
-import UserPreference from "../User/UserPreference";
-import News from "../CreationMeeting/News";
-import TableMeetingUser from "../User/TableMeetingUser";
-import Button from "@mui/material/Button";
-import { grey } from "@mui/material/colors";
-import { styled } from "@mui/material/styles";
-import axios from "axios";
 
-const User = ({ news, data }) => {
-  const ColorButton = styled(Button)(({ theme }) => ({
-    color: theme.palette.getContrastText(grey[600]),
-    backgroundColor: grey[600],
-    "&:hover": {
-      backgroundColor: grey[700],
-    },
-  }));
-
-  const getToken = () => sessionStorage.getItem("token");
-const [submitsucess,setSubmitSucess]=useState(false)
+const User = ({ data }) => {
+  
+  const [submitsucess,setSubmitSucess]=useState(false)
   const [selectedColumn, setSelectedColumn] = useState([]);
   const [checkboxValues, setCheckboxValues] = useState([]);
   const [selectedDates, setSelectedDates] = useState([]);
@@ -58,7 +46,7 @@ const [submitsucess,setSubmitSucess]=useState(false)
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           <Grid className="sx_news" item xs={2}>
-            <News news={news} start={0} numberOfDivsNews={3} />
+            {/* <News news={news} start={0} numberOfDivsNews={3} /> */}
           </Grid>
           <Grid style={{ marginTop: 32, paddingLeft: 0 }} item xs={8}>
             <div className="field">
@@ -92,7 +80,7 @@ const [submitsucess,setSubmitSucess]=useState(false)
             </div>
           </Grid>
           <Grid className="dx_news" item xs={2}>
-            <News news={news} start={3} numberOfDivsNews={6} />
+            {/* <News news={news} start={3} numberOfDivsNews={6} /> */}
           </Grid>
         </Grid>
       </Box>
