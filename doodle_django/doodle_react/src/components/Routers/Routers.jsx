@@ -22,6 +22,7 @@ import Login from "../Login/Login";
 import Logout from "../Login/Logout";
 import User from "../../pages/User";
 import ProtectedRoute from "./ProtectedRoute";
+import {isUserAuthenticated, getUserInfo} from "../Login/Utils";
 
 function Routers() {
   const token = sessionStorage.getItem("token");
@@ -34,7 +35,7 @@ function Routers() {
         <Route
           path="/login"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={!token}>
+            <ProtectedRoute redirectPath="/" isAllowed={isUserAuthenticated()}>
               <Login />
             </ProtectedRoute>
           }
@@ -42,7 +43,7 @@ function Routers() {
         <Route
           path="/register"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={!token}>
+            <ProtectedRoute redirectPath="/" isAllowed={isUserAuthenticated()}>
               <Register />
             </ProtectedRoute>
           }
@@ -50,14 +51,21 @@ function Routers() {
         <Route
           path="/logout"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={!!token}>
+            <ProtectedRoute redirectPath="/" isAllowed={!isUserAuthenticated()}>
+              <Logout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute redirectPath="/" isAllowed={!isUserAuthenticated()}>
               <Logout />
             </ProtectedRoute>
           }
         />
         <Route path="/create" element={<Creation />} />
         <Route path="/manage/:meetingId" element={<Manage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/preference" element={<Preference />} />
         <Route path="/user/:uuid" element={<User />} />
         <Route path="*" element={<p>There's nothing here: 404!</p>} />
