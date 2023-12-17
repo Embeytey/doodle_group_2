@@ -12,8 +12,6 @@ import Login from "../Login/Login";
 import Logout from "../Login/Logout";
 import User from "../../pages/User";
 import ProtectedRoute from "./ProtectedRoute";
-import "react-toastify/dist/ReactToastify.css";
-import "../../App.css";
 
 import "react-toastify/dist/ReactToastify.css";
 import "../../App.css";
