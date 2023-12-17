@@ -62,8 +62,7 @@ class VotePermissions(BasePermission):
 
         schedule_poll_link_query = Q(schedule_poll=schedule_poll) if schedule_poll is not None else Q(token=link_token)
         schedule_poll_link = SchedulePollLink.objects.filter(schedule_poll_link_query)
-        if schedule_poll_link.exists():
-            return True
+        return schedule_poll_link.exists()
 
         meeting = schedule_poll.meeting
 

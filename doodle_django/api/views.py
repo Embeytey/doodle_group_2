@@ -140,7 +140,7 @@ class VoteViewSet(viewsets.ModelViewSet):
         time_slot_data = request.data.get('time_slot', {})
         user_nickname = request.data.get('user_nickname')
         user_pk = request.user.pk if request.user.is_authenticated else None
-        link_token = request.query_params.get('link_token')
+        link_token = request.data.get("link_token", request.query_params.get('link_token'))
 
         if link_token is None:
             return Response({'error': 'Link token is required.'}, status=status.HTTP_404_NOT_FOUND)

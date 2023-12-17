@@ -21,4 +21,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('link/<str:token>/', api_link, name="api_link"),
     path('book/<str:meeting_id>/', api_book, name='api_book'),
+    path('user-info/', api_user_info, name='user-info'),
 ]

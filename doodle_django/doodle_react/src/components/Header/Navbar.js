@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import {isUserAuthenticated, getUserInfo} from "../Login/Utils";
 import unical from "../images/unical.png";
 import "../../index.css";
 
@@ -32,17 +33,6 @@ const Navbar = () => {
     textDecoration: "none",
     color: "inherit",
   };
-
-  const getUserInfo = () => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    return user ? user.username : null;
-  };
-
-  const isAuthenticated = () => {
-    return !!sessionStorage.getItem("token");
-  };
-
-  const username = getUserInfo();
 
   return (
     <AppBar
@@ -96,13 +86,13 @@ const Navbar = () => {
           aria-label="menu"
           onClick={handleMenuOpen}>
           <AccountCircleIcon style={{ marginRight: 3 }} />
-          {isAuthenticated ? username : <p style={{ margin: 0 }}>Guest</p>}
+          {isUserAuthenticated() ? getUserInfo().username : <p style={{ margin: 0 }}>Guest</p>}
         </IconButton>
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}>
-          {isAuthenticated ? (
+          {isUserAuthenticated() ? (
             <MenuItem onClick={handleMenuClose}>
               <Link to="/logout" style={linkStyle}>
                 Logout
