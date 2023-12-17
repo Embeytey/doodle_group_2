@@ -50,7 +50,7 @@ const Login = () => {
     return bool;
   };
   
-  const { login, setUserDetail } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmitLogin = async () => {
     if (checkRequirements()) {
@@ -59,11 +59,7 @@ const Login = () => {
           `http://127.0.0.1:8000/api/auth/login/`,
           data
         );
-        const user_res = await axios.get(
-            `http://127.0.0.1:8000/api/user-info/`
-        );
         login(response.data.key);
-        setUserDetail(user_res.data);
         navigate("/");
       } catch (error) {
         alert(error);

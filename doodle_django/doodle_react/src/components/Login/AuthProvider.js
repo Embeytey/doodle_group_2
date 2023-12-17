@@ -10,6 +10,13 @@ export const AuthProvider = ({ children }) => {
   const login = (key) => {
     axios.defaults.headers.common["Authorization"] = `Token ${key}`;
     setIsAuthenticated(true);
+
+    axios.get(`http://127.0.0.1:8000/api/user-info/`)
+      .then((response) => {
+        setUserDetail(response.data);})
+      .catch((error) => {
+        console.log(error);}
+      );
   };
 
   const logout = () => {
@@ -26,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, user, setUserDetail, unsetUserDetail }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, user, setUserDetail }}>
       {children}
     </AuthContext.Provider>
   );
