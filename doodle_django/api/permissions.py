@@ -2,6 +2,8 @@ import uuid
 
 from rest_framework.permissions import BasePermission
 
+from django.db.models import Q
+
 from .models import *
 
 class MeetingPermissions(BasePermission):
@@ -43,30 +45,31 @@ class VotePermissions(BasePermission):
             return True
 
         schedule_poll_id = request.data.get("schedule_poll_id", request.query_params.get("schedule_poll_id"))
-        if schedule_poll_id is None:
-            return False
         passcode = request.data.get("passcode", request.query_params.get("passcode"))
         link_token = request.data.get("link_token", request.query_params.get("link_token"))
+
         if link_token is not None:
             link_token = uuid.UUID(link_token)
         
         schedule_poll = None
         schedule_poll_link = None
+        schedule_poll_link_query = Q(token=link_token) if link_token else Q()
         try:
             schedule_poll = SchedulePoll.objects.get(pk=schedule_poll_id)
-            schedule_poll_link = SchedulePollLink.objects.get(schedule_poll=schedule_poll)
-            if schedule_poll is None:
-                return False
-        except (SchedulePoll.DoesNotExist):
-            return False
+            schedule_poll_link_query = Q(schedule_poll_link_query | Q(schedule_poll=schedule_poll))
+        except SchedulePoll.DoesNotExist:
+            pass
+
+        schedule_poll_link_query = Q(schedule_poll=schedule_poll) if schedule_poll is not None else Q(token=link_token)
+        schedule_poll_link = SchedulePollLink.objects.filter(schedule_poll_link_query)
+        if schedule_poll_link.exists():
+            return True
 
         meeting = schedule_poll.meeting
 
         if request.user and request.user == meeting.user:
             return True
         if meeting.passcode == passcode:
-            return True
-        if schedule_poll_link.token == link_token:
             return True
         return False
 

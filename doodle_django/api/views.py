@@ -111,34 +111,49 @@ class VoteViewSet(viewsets.ModelViewSet):
         return self.serializer_class
 
     def list(self, request, *args, **kwargs):
-        schedule_poll_id = request.query_params.get('schedule_poll_id')
+        link_token = request.query_params.get('link_token')
 
-        if not schedule_poll_id:
-            return Response({'error': 'Schedule Poll ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+        if link_token is None:
+            return Response({'error': 'Link token is required.'}, status=status.HTTP_404_NOT_FOUND)
 
-        votes = Vote.objects.filter(time_slot__schedule_poll_id=schedule_poll_id)
+        link_token = uuid.UUID(link_token)
+        schedule_poll_link = None
+
+        try:
+            schedule_poll_link = SchedulePollLink.objects.get(token=link_token)
+        except SchedulePollLink.DoesNotExist:
+            return Response({'error': 'Link token is not valid.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        schedule_poll = schedule_poll_link.schedule_poll
+
+        votes = Vote.objects.filter(time_slot__schedule_poll_id=schedule_poll.id)
         serializer = self.get_serializer(votes, many=True)
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         preference = request.data.get('preference')
         time_slot_data = request.data.get('time_slot', {})
-        schedule_poll_id = request.data.get('schedule_poll_id')
         user_nickname = request.data.get('user_nickname')
         user_pk = request.user.pk if request.user.is_authenticated else None
+        link_token = request.query_params.get('link_token')
+
+        if link_token is None:
+            return Response({'error': 'Link token is required.'}, status=status.HTTP_404_NOT_FOUND)
         
-        if not schedule_poll_id:
-            return Response({'error': 'Schedule Poll ID is required'}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            schedule_poll_instance = SchedulePoll.objects.get(id=schedule_poll_id)
-        except SchedulePoll.DoesNotExist:
-            return Response({'error': 'Schedule Poll does not exist'}, status=status.HTTP_404_NOT_FOUND)
-
         try:
             preference_instance = Preference.objects.get(description=preference)
         except Preference.DoesNotExist:
             return Response({'error': 'Preference does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        link_token = uuid.UUID(link_token)
+        schedule_poll_link = None
+
+        try:
+            schedule_poll_link = SchedulePollLink.objects.get(token=link_token)
+        except SchedulePollLink.DoesNotExist:
+            return Response({'error': 'Link token is not valid.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        schedule_poll_instance = schedule_poll_link.schedule_poll
 
         time_slot_instance, created = TimeSlot.objects.get_or_create(
             schedule_poll=schedule_poll_instance,
