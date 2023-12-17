@@ -58,6 +58,30 @@ const CreateGroupPolly = ({ news }) => {
     });
   };
 
+  // const tileDisabled = ({ date, view }) =>
+  //   view === "month" && date < new Date();
+
+  const [error, setError] = useState(false);
+  const [errorDate, setErrorDate] = useState(false);
+  const [title, setTitle] = useState("");
+
+  const updateTitle = (newTitle) => {
+    setTitle(newTitle);
+    if (newTitle !== "") setError(false);
+  };
+
+  const [description, setDescription] = useState("");
+
+  const updateDescription = (newDescription) => {
+    setDescription(newDescription);
+  };
+
+  const [location, setLocation] = useState("");
+
+  const updateLocation = (newLocation) => {
+    setLocation(newLocation);
+  };
+
   const [video, setVideo] = useState("Zoom");
 
   const updateVideo = (newVideo) => {
@@ -70,24 +94,12 @@ const CreateGroupPolly = ({ news }) => {
     setChecked(event.target.checked);
   };
 
-  const [data, setData] = useState({
-    title: "",
-    description: "",
-    location: "",
-  });
-
-  const [error, setError] = useState({
-    title: false,
-    date: false,
-  });
-
   let navigate = useNavigate();
 
+  const getToken = () => sessionStorage.getItem("token");
+
   const titleError = () => {
-    setError((prevErrors) => ({
-      ...prevErrors,
-      ["title"]: true,
-    }));
+    setError(true);
     const element = document.getElementById("title_form");
     if (element) {
       element.scrollIntoView({
@@ -99,22 +111,23 @@ const CreateGroupPolly = ({ news }) => {
 
   const checkRequirements = () => {
     let bool = true;
-    if (data.title === "") {
+    if (title === "") {
       titleError();
       bool = false;
     }
     if (selectedDates.length === 0) {
-      setError((prevErrors) => ({
-        ...prevErrors,
-        ["date"]: true,
-      }));
+      setErrorDate(true);
       bool = false;
     }
     return bool;
   };
 
   const deleteFields = () => {
+    updateTitle("");
     setChecked(false);
+    updateDescription("");
+    updateLocation("");
+    updateVideo("");
   };
 
   const formatDeadline = (deadline) => {
@@ -162,10 +175,10 @@ const CreateGroupPolly = ({ news }) => {
     const endTime = selectedTimeRange[1];
     const duration = calculateDuration(startTime, endTime);
 
-    let sdata = {
-      title: data.title,
-      description: data.description,
-      location: data.location,
+    let data = {
+      title: title,
+      description: description,
+      location: location,
       duration: duration,
       video_conferencing: checked,
       start_date: startDate,
@@ -173,17 +186,13 @@ const CreateGroupPolly = ({ news }) => {
       timeslots: array_time_slots,
     };
     try {
-      const meetingResponse = await axios.post(
-        "http://127.0.0.1:8000/api/meetings/",
-        sdata
-      );
-      const meetingDetail = {
-        id: meetingResponse.data.id,
-        passcode: meetingResponse.data.passcode,
-        link: meetingResponse.data.link,
-      };
-      localStorage.setItem("created_meeting", JSON.stringify(meetingDetail));
-      navigate(`/manage/${meetingResponse.data.id}`);
+      await axios.post("http://127.0.0.1:8000/api/meetings/new/", data, {
+        headers: {
+          authorization: `Token ${getToken()}`,
+        },
+      });
+      // alert("Meeting Created successfully!");
+      navigate("/manage");
       deleteFields();
     } catch (e) {}
   };
@@ -193,20 +202,6 @@ const CreateGroupPolly = ({ news }) => {
     if (checkRequirements()) {
       handleApi(e);
     }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "title") {
-      setError((prevErrors) => ({
-        ...prevErrors,
-        [name]: false,
-      }));
-    }
-    setData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
   };
 
   const onExpand = (index) => {
@@ -230,15 +225,19 @@ const CreateGroupPolly = ({ news }) => {
         <Grid className="middle_grid" item xs={8}>
           <div className="field">
             <CreateGroup
-              data={data}
-              setData={handleInputChange}
-              onContraction={onContraction}
-              error={error}
-              onExpand={onExpand}
+              title={title}
+              setTitle={updateTitle}
+              description={description}
+              setDescription={updateDescription}
+              location={location}
+              setLocation={updateLocation}
               video={video}
+              onContraction={onContraction}
               setVideo={updateVideo}
               checked={checked}
               setChecked={updateCheck}
+              error={error}
+              onExpand={onExpand}
             />
           </div>
           <div className="field" style={{ paddingTop: 15 }}>
@@ -251,33 +250,52 @@ const CreateGroupPolly = ({ news }) => {
                   <Calendar
                     onClickDay={(value) => handleDateClick(value)}
                     value={selectedDates.map((dateObj) => dateObj.date)}
+                    // tileDisabled={tileDisabled}
                   />
                 </div>
               </Grid>
               <Grid item md={6}>
                 <div style={{ flex: 1 }}>
                   <h2>Selected Dates:</h2>
-                  {/* Rest of your code */}
-                  <div className="time-range-section">
-                    <h2>Select Time Range:</h2>
-                  </div>
+                  {selectedDates.length > 0 ? (
+                    <ul>
+                      {selectedDates.map((dateObj, index) => (
+                        <li key={index}>
+                          {dateObj.date.toDateString()} from{" "}
+                          {dateObj.timeRange[0]} to {dateObj.timeRange[1]}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div>
+                      {!errorDate && (
+                        <p className="no_error">No dates selected</p>
+                      )}
+                      {errorDate && <p className="error">No dates selected</p>}
+                    </div>
+                  )}
                   <div>
-                    <TimePicker
-                      style={{ backgroundColor: "white", color: "#757575" }}
-                      onChange={(time) => handleTimeChange(time, 0)}
-                      value={selectedTimeRange[0]}
-                      className="custom-time-picker"
-                    />
-                    <p>Start Time: {selectedTimeRange[0]}</p>
-                  </div>
-                  <div>
-                    <TimePicker
-                      style={{ backgroundColor: "white", color: "#757575" }}
-                      onChange={(time) => handleTimeChange(time, 1)}
-                      value={selectedTimeRange[1]}
-                      className="custom-time-picker"
-                    />
-                    <p>End Time: {selectedTimeRange[1]}</p>
+                    <div div className="time-range-section">
+                      <h2>Select Time Range:</h2>
+                    </div>
+                    <div>
+                      <TimePicker
+                        style={{ color: "#757575" }}
+                        onChange={(time) => handleTimeChange(time, 0)}
+                        value={selectedTimeRange[0]}
+                        className="custom-time-picker"
+                      />
+                      <p>Start Time: {selectedTimeRange[0]}</p>
+                    </div>
+                    <div>
+                      <TimePicker
+                        style={{ color: "#757575" }}
+                        onChange={(time) => handleTimeChange(time, 1)}
+                        value={selectedTimeRange[1]}
+                        className="custom-time-picker"
+                      />
+                      <p>End Time: {selectedTimeRange[1]}</p>
+                    </div>
                   </div>
                 </div>
               </Grid>

@@ -4,15 +4,18 @@ import "./createGroup.css";
 import SwitchSelect from "./SwitchSelect";
 
 const CreateGroup = ({
-  data,
-  setData,
+  title,
+  setTitle,
+  description,
+  setDescription,
+  location,
+  setLocation,
   onContraction,
-  error,
-  onExpand,
-  video,
   setVideo,
   checked,
   setChecked,
+  error,
+  onExpand,
 }) => {
   return (
     <div className="CreateGroup">
@@ -34,16 +37,15 @@ const CreateGroup = ({
         <div className="form_creation">
           <TextField
             required
-            helperText={error.title ? "Your invite needs a name" : ""}
-            error={error.title}
+            helperText={error ? "Your invite needs a name" : ""}
+            error={error}
             id="title-outlined-required"
             label="Title"
-            value={data.title}
-            name="title"
+            value={title}
             style={{
               backgroundColor: "white",
             }}
-            onChange={(e) => setData(e)}
+            onChange={(e) => setTitle(e.target.value)}
             InputLabelProps={{
               style: {
                 fontFamily: "Quicksand",
@@ -56,14 +58,13 @@ const CreateGroup = ({
           <TextField
             id="outlined-multiline-flexible"
             label="Description"
-            name="description"
             multiline
             maxRows={4}
             style={{
               backgroundColor: "white",
             }}
-            value={data.description}
-            onChange={(e) => setData(e)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             InputLabelProps={{
               style: {
                 fontFamily: "Quicksand",
@@ -76,12 +77,11 @@ const CreateGroup = ({
           <TextField
             id="outlined"
             label="Location"
-            name="location"
-            value={data.location}
+            value={location}
             style={{
               backgroundColor: "white",
             }}
-            onChange={(e) => setData(e)}
+            onChange={(e) => setLocation(e.target.value)}
             InputLabelProps={{
               style: {
                 fontFamily: "Quicksand",

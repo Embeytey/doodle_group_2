@@ -14,7 +14,7 @@ const NAV__LINKS = [
   },
   {
     display: "logout",
-    url: "/",
+    url: "/logout",
   },
   {
     display: "Dashboard",
@@ -24,10 +24,10 @@ const NAV__LINKS = [
     display: "Create",
     url: "/create",
   },
-  {
-    display: "Contact",
-    url: "/contact",
-  },
+  // {
+  //   display: "Contact",
+  //   url: "/contact",
+  // },
 ];
 
 const user = JSON.parse(sessionStorage.getItem("user"));

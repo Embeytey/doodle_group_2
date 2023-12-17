@@ -1,12 +1,12 @@
 import React from "react";
 import Routers from "../Routers/Routers";
 import FeedbackComponent from "../Feedback/FeedbackComponent";
-import Navbar from "../Header/Navbar";
+import Header from "../Header/Header";
 
 function Layout() {
   return (
     <div>
-      <Navbar />
+      <Header />
       <div style={{ marginTop: 80 }}>
         <Routers />
       </div>
