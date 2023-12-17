@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from '../Login/AuthProvider';
 import {
   AppBar,
   Toolbar,
@@ -12,7 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import {isUserAuthenticated, getUserInfo} from "../Login/Utils";
 import unical from "../images/unical.png";
 import "../../index.css";
 
@@ -33,6 +33,8 @@ const Navbar = () => {
     textDecoration: "none",
     color: "inherit",
   };
+
+  const {user, isAuthenticated} = useAuth();
 
   return (
     <AppBar
@@ -86,13 +88,13 @@ const Navbar = () => {
           aria-label="menu"
           onClick={handleMenuOpen}>
           <AccountCircleIcon style={{ marginRight: 3 }} />
-          {isUserAuthenticated() ? getUserInfo().username : <p style={{ margin: 0 }}>Guest</p>}
+          {isAuthenticated ? user.username : <p style={{ margin: 0 }}>Guest</p>}
         </IconButton>
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}>
-          {isUserAuthenticated() ? (
+          {isAuthenticated ? (
             <MenuItem onClick={handleMenuClose}>
               <Link to="/logout" style={linkStyle}>
                 Logout

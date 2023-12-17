@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { isUserAuthenticated, getUserInfo } from "../Login/Utils";
+import { useAuth } from "../Login/AuthProvider";
 
 import Welcome from "../../pages/Welcome";
 import Creation from "../../pages/Creation";
@@ -18,6 +18,8 @@ import "../../App.css";
 
 function Routers() {
 
+  const { isAuthenticated } = useAuth();
+
   return (
     <div>
       <Routes>
@@ -25,7 +27,7 @@ function Routers() {
         <Route
           path="/login"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={!isUserAuthenticated()}>
+            <ProtectedRoute redirectPath="/" isAllowed={!isAuthenticated}>
               <Login />
             </ProtectedRoute>
           }
@@ -33,7 +35,7 @@ function Routers() {
         <Route
           path="/register"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={!isUserAuthenticated()}>
+            <ProtectedRoute redirectPath="/" isAllowed={!isAuthenticated}>
               <Register />
             </ProtectedRoute>
           }
@@ -41,7 +43,7 @@ function Routers() {
         <Route
           path="/logout"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={isUserAuthenticated()}>
+            <ProtectedRoute redirectPath="/" isAllowed={isAuthenticated}>
               <Logout />
             </ProtectedRoute>
           }
@@ -49,7 +51,7 @@ function Routers() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={isUserAuthenticated()}>
+            <ProtectedRoute redirectPath="/" isAllowed={isAuthenticated}>
               <Dashboard />
             </ProtectedRoute>
           }

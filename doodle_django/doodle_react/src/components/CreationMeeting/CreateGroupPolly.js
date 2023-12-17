@@ -162,7 +162,7 @@ const CreateGroupPolly = ({ news }) => {
     const endTime = selectedTimeRange[1];
     const duration = calculateDuration(startTime, endTime);
 
-    let data = {
+    let sdata = {
       title: data.title,
       description: data.description,
       location: data.location,
@@ -175,7 +175,7 @@ const CreateGroupPolly = ({ news }) => {
     try {
       const meetingResponse = await axios.post(
         "http://127.0.0.1:8000/api/meetings/",
-        data
+        sdata
       );
       const meetingDetail = {
         id: meetingResponse.data.id,

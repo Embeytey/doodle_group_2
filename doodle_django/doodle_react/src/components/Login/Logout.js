@@ -1,26 +1,27 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useAuth } from './AuthProvider'; 
 
 const Logout = () => {
+
+  const { logout, unsetUserDetail } = useAuth();
+ 
+  const navigate = useNavigate();
+ 
   useEffect(() => {
     axios.post(
       "http://127.0.0.1:8000/api/auth/logout/"
-      ).then(response => {
-        sessionStorage.removeItem("user");
-        sessionStorage.removeItem("token");
-      }).catch(error => {
-        sessionStorage.removeItem("user");
-        sessionStorage.removeItem("token");
-      }).finally(() => {
-        navigate("/");
-      });
+      ).then(response => {})
+        .catch(error => {})
+        .finally(() => {
+          logout();
+          unsetUserDetail();
+          navigate("/");
+        });
   }, []);
 
-  const navigate = useNavigate();
-
-
-  return <div></div>;
+  return (<div></div>);
 };
 
 export default Logout;
