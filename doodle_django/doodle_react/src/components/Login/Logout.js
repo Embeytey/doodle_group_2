@@ -1,11 +1,10 @@
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
-import { useEffect } from 'react';
-
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Logout = () => {
-
   useEffect(() => {
+    console.log("CIAOOOOOOOOOOOOOOOOOOOOoo");
     callLogout();
   }, []);
 
@@ -14,20 +13,17 @@ const Logout = () => {
   const callLogout = async () => {
     try {
       const response = await axios.post(
-        'http://127.0.0.1:8000/api/auth/logout/'
-      )
+        "http://127.0.0.1:8000/api/auth/logout/"
+      );
       sessionStorage.removeItem("user");
       sessionStorage.removeItem("token");
       navigate("/");
-    }
-    catch (exception){
+    } catch (exception) {
       alert(exception);
     }
   };
 
-  return (
-    <div></div>
-  );
+  return <div></div>;
 };
 
 export default Logout;

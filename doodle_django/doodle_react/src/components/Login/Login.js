@@ -37,12 +37,12 @@ const Login = () => {
         }
       );
       sessionStorage.setItem("token", response.data.key);
-      axios.defaults.headers.common["Authorization"] = "Token " + sessionStorage.getItem("token");
+      axios.defaults.headers.common["Authorization"] =
+        "Token " + sessionStorage.getItem("token");
       const user_res = await axios.post(`http://127.0.0.1:8000/api/user-info/`);
       console.log(user_res);
       sessionStorage.setItem("user", JSON.stringify(user_res.data));
       navigate("/");
-      
     } catch (error) {
       alert(error);
       console.log(error);
@@ -57,57 +57,57 @@ const Login = () => {
 
   const btnstyle = { margin: "8px 0px" };
   return (
-    <div className="login">
-      <h2> Login for Doodle Unical</h2>
+    <div>
+      <div className="field">
+        <h2> Login for Doodle Unical</h2>
 
-      <Card
-        sx={{ maxWidth: 550, marginTop: 5, background: "#d1c3bb" }}
-        elevation={0}
-        display="flex"
-      >
-        <Box sx={{ m: "1rem" }} />
-        <TextField
-          label="Username"
-          placeholder="Enter username"
-          variant="outlined"
-          fullWidth
-          required
-          name="username"
-          value={data.username}
-          onChange={handleInputChange}
-        />
-        <Box sx={{ m: "2rem" }} />
-        <TextField
-          label="Password"
-          name="password"
-          placeholder="Enter password"
-          type="password"
-          variant="outlined"
-          fullWidth
-          required
-          value={data.password}
-          onChange={handleInputChange}
-        />
-        <Box sx={{ m: "2rem" }} />
-        <div style={{ mx: 100 }}>
-          <Button
-            type="submit"
-            color="grey"
-            variant="contained"
-            size="large"
-            fullWidth
-            style={btnstyle}
-            onClick={handleSubmitLogin}
-          >
-            Login
-          </Button>
+        <Card
+          sx={{ maxWidth: 550, marginTop: 5, background: "#d1c3bb" }}
+          elevation={0}
+          display="flex">
           <Box sx={{ m: "1rem" }} />
-          <Typography elevation={0}>
-            {" "}
-            Don't have an account ? <Link to="/register">Register</Link>
-          </Typography>
-        </div>
-      </Card>
+          <TextField
+            label="Username"
+            placeholder="Enter username"
+            variant="outlined"
+            fullWidth
+            required
+            name="username"
+            value={data.username}
+            onChange={handleInputChange}
+          />
+          <Box sx={{ m: "2rem" }} />
+          <TextField
+            label="Password"
+            name="password"
+            placeholder="Enter password"
+            type="password"
+            variant="outlined"
+            fullWidth
+            required
+            value={data.password}
+            onChange={handleInputChange}
+          />
+          <Box sx={{ m: "2rem" }} />
+          <div style={{ mx: 100 }}>
+            <Button
+              type="submit"
+              color="grey"
+              variant="contained"
+              size="large"
+              fullWidth
+              style={btnstyle}
+              onClick={handleSubmitLogin}>
+              Login
+            </Button>
+            <Box sx={{ m: "1rem" }} />
+            <Typography elevation={0}>
+              {" "}
+              Don't have an account ? <Link to="/register">Register</Link>
+            </Typography>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };

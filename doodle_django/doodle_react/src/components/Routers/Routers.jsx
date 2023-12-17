@@ -28,7 +28,6 @@ function Routers() {
 
   return (
     <div>
-      {/* <Navbar /> */}
       <Routes>
         <Route path="/" name="Home" element={<Welcome />} />
         <Route
@@ -50,7 +49,7 @@ function Routers() {
         <Route
           path="/logout"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={!!token}>
+            <ProtectedRoute redirectPath="/" isAllowed={true}>
               <Logout />
             </ProtectedRoute>
           }
