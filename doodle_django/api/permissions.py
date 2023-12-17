@@ -9,7 +9,7 @@ from .models import *
 class MeetingPermissions(BasePermission):
     def has_permission(self, request, view):
         if view.action == 'list':
-            return request.user and request.user.is_superuser
+            return request.user and request.user.is_authenticated
         return True
 
 

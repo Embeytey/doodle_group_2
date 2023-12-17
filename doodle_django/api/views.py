@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from django.shortcuts import redirect
 from django.utils.crypto import get_random_string
+from django.contrib.auth.decorators import login_required
 
 from .models import *
 from .serializers import *
@@ -20,6 +21,10 @@ class MeetingViewSet(viewsets.ModelViewSet):
         if self.action in ['retrieve', 'list']:
             return MeetingScheduleSerializer
         return MeetingSerializer
+
+    def list(self, request, *args, **kwargs):
+        meetings = Meeting.objects.filter(user=request.user)
+        return Response(MeetingScheduleSerializer(meetings, many=True).data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         user_pk = request.user.pk if request.user.is_authenticated else None
@@ -246,3 +251,14 @@ def api_book(request, meeting_id):
         return Response({}, status=status.HTTP_200_OK)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@login_required
+def api_user_info(request):
+    user = request.user
+    user_data = {
+        'username': user.username,
+        'email': user.email,
+    }
+    return Response(user_data, status=status.HTTP_200_OK)
