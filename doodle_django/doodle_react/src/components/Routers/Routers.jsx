@@ -23,9 +23,7 @@ import Logout from "../Login/Logout";
 import User from "../../pages/User";
 import ProtectedRoute from "./ProtectedRoute";
 
-
-function
-  Routers() {
+function Routers() {
   const token = sessionStorage.getItem("token");
 
   return (

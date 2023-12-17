@@ -68,8 +68,6 @@ function Welcome() {
       <Team />
       <br />
       <Faq />
-      <br />
-      <FeedbackComponent />
     </div>
   );
 }

@@ -2,15 +2,17 @@ import React from "react";
 import Header from "../Header/Header";
 import Routers from "../Routers/Routers";
 import useState from "react";
+import FeedbackComponent from "../Feedback/FeedbackComponent";
+import Navbar from "../Header/Navbar";
 
 function Layout(isLoggedIn) {
-  // const [isLoggedIn, setIsLoggedIn] = useState([false]);
   return (
     <div>
-      <Header isLoggedIn={isLoggedIn} />
+      <Navbar />
       <div style={{ marginTop: 80 }}>
         <Routers />
       </div>
+      <FeedbackComponent />
     </div>
   );
 }

@@ -58,8 +58,8 @@ const CreateGroupPolly = ({ news }) => {
     });
   };
 
-  const tileDisabled = ({ date, view }) =>
-    view === "month" && date < new Date();
+  // const tileDisabled = ({ date, view }) =>
+  //   view === "month" && date < new Date();
 
   const [error, setError] = useState(false);
   const [errorDate, setErrorDate] = useState(false);
@@ -240,9 +240,9 @@ const CreateGroupPolly = ({ news }) => {
               onExpand={onExpand}
             />
           </div>
-          <div className="field">
-            <div style={{ display: "flex" }}>
-              <div className="container">
+          <div className="field" style={{ paddingTop: 15 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={12} md={6}>
                 <div className="calendar-section">
                   <div style={{ flex: 1 }}>
                     <h1>Add time</h1>
@@ -250,9 +250,11 @@ const CreateGroupPolly = ({ news }) => {
                   <Calendar
                     onClickDay={(value) => handleDateClick(value)}
                     value={selectedDates.map((dateObj) => dateObj.date)}
-                    tileDisabled={tileDisabled}
+                    // tileDisabled={tileDisabled}
                   />
                 </div>
+              </Grid>
+              <Grid item md={6}>
                 <div style={{ flex: 1 }}>
                   <h2>Selected Dates:</h2>
                   {selectedDates.length > 0 ? (
@@ -296,24 +298,23 @@ const CreateGroupPolly = ({ news }) => {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div
-              style={{
-                textAlign: "end",
-                marginBottom: 20,
-                marginRight: 20,
-                marginTop: 20,
-              }}
-            >
-              <PrimaryButton
-                text={"Create Invate and Continue"}
-                functionOnClick={handleButtonClick}
-                style={{ margin: 20, textAlign: "end" }}
-                variant="contained"
-                type="submit"
-              />
-            </div>
+              </Grid>
+            </Grid>
+          </div>
+          <div
+            style={{
+              textAlign: "end",
+              marginBottom: 20,
+              marginRight: 20,
+              marginTop: 20,
+            }}>
+            <PrimaryButton
+              text={"Create Invate and Continue"}
+              functionOnClick={handleButtonClick}
+              style={{ margin: 20, textAlign: "end" }}
+              variant="contained"
+              type="submit"
+            />
           </div>
         </Grid>
         <Grid className="dx_news" item xs={2}>
