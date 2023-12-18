@@ -80,12 +80,6 @@ class Migration(migrations.Migration):
                     models.DateTimeField(auto_now_add=True, db_column="creation_date"),
                 ),
                 ("passcode", models.CharField(db_column="passcode", max_length=5)),
-                (
-                    "user_nickname",
-                    models.CharField(
-                        blank=True, db_column="user_nickname", max_length=20, null=True
-                    ),
-                ),
             ],
         ),
         migrations.CreateModel(
@@ -167,12 +161,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "user_nickname",
-                    models.CharField(
-                        blank=True, db_column="user_nickname", max_length=20, null=True
-                    ),
-                ),
-                (
                     "time_slot",
                     models.ForeignKey(
                         db_column="time_slot_id",
@@ -194,7 +182,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name="vote",
-            unique_together={("time_slot", "user", "user_nickname")},
+            unique_together={("time_slot", "user")},
         ),
         migrations.CreateModel(
             name="SchedulePollLink",

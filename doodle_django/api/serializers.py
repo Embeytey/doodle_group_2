@@ -48,18 +48,16 @@ class SchedulePollLinkSerializer(serializers.ModelSerializer):
 class VoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vote
-        fields = ("time_slot", "user", "user_nickname", "preference")
+        fields = ("time_slot", "user", "preference")
 
     def validate(self, data):
         time_slot = data.get("time_slot")
         user = data.get("user")
-        user_nickname = data.get("user_nickname")
         preference = data.get("preference")
 
         existing_vote = Vote.objects.filter(
             Q(time_slot=time_slot)
             & Q(user=user)
-            & Q(user_nickname=user_nickname)
             & Q(preference=preference)
         ).first()
 
@@ -129,7 +127,6 @@ class VoteReturnSerializer(serializers.ModelSerializer):
         fields = (
             "time_slot",
             "schedule_poll_id",
-            "user_nickname",
             "preference",
             "user",
         )

@@ -45,10 +45,8 @@ class MeetingViewSet(viewsets.ModelViewSet):
             "title": request.data.get("title", None),
             "description": request.data.get("description", None),
             "location": request.data.get("location", None),
-            "user_nickname": request.data.get("user_nickname", None),
             "duration": request.data.get("duration", None),
             "deadline": request.data.get("deadline", None),
-            "passcode": get_random_string(length=5),
         }
 
         meeting_serializer = self.get_serializer(data=meeting_data)
@@ -158,7 +156,6 @@ class VoteViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         preference = request.data.get("preference")
         time_slot_data = request.data.get("time_slot", {})
-        user_nickname = request.data.get("user_nickname")
         user_pk = request.user.pk if request.user.is_authenticated else None
         link_token = request.data.get(
             "link_token", request.query_params.get("link_token")
@@ -202,7 +199,6 @@ class VoteViewSet(viewsets.ModelViewSet):
             data={
                 "user": user_pk,
                 "preference": preference_instance.id,
-                "user_nickname": user_nickname,
                 "time_slot": time_slot_instance.id,
             }
         )

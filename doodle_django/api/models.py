@@ -87,9 +87,6 @@ class Meeting(models.Model):
         blank=True,
         null=True,
     )
-    user_nickname = models.CharField(
-        db_column="user_nickname", max_length=20, blank=True, null=True
-    )
 
 
 class SchedulePoll(models.Model):
@@ -127,13 +124,9 @@ class Vote(models.Model):
         blank=True,
         null=True,
     )
-    user_nickname = models.CharField(
-        db_column="user_nickname",
-        max_length=20,
-    )
 
     class Meta:
-        unique_together = ("time_slot", "user", "user_nickname")
+        unique_together = ("time_slot", "user")
 
 
 class Feedback(models.Model):
