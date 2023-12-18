@@ -1,7 +1,7 @@
 import UserContainer from "../components/User/UserContainer";
 import news from "../news.json";
-import { useState, useEffect, useParam } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import Preference from "./Preference";
 import axios from "axios";
 
@@ -9,7 +9,7 @@ const User = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
-  const { uuid } = useParam();
+  const { uuid } = useParams();
 
   const meetingId =
     searchParams.get("id") !== null ? searchParams.get("id") : -1;
