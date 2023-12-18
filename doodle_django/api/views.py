@@ -294,6 +294,18 @@ class FeedbackViewSet(viewsets.ModelViewSet):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
 
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        serializer = FeedbackSerializer(data=data)
+        if serializer.is_valid():
+            feedback = serializer.save()
+            for file in request.FILES.values():
+                FeedbackAttachment.objects.create(
+                    feedback=feedback,
+                    file=file
+                )
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     def get(self, request, *args, **kwargs):
         return Response( # pragma: no cover
             {"error": "GET method not allowed"},

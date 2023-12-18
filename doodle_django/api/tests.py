@@ -3,6 +3,7 @@ from rest_framework import status
 
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now, datetime, timedelta
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .models import *
 
@@ -168,6 +169,10 @@ class VoteViewSetTests(APITestCase):
 
 
 class FeedbackViewSetTests(APITestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+        self.client.force_authenticate(user=self.user)
+        self.feedback_data = {'name':'test', 'message': 'Test feedback', 'email':'test@test.com'}
 
     def test_get_feedback_not_allowed(self):
         response = self.client.get('/api/feedbacks/')
@@ -184,13 +189,13 @@ class FeedbackViewSetTests(APITestCase):
 
     def test_update_feedback_not_allowed(self):
         feedback = Feedback.objects.create(name="test", message="test", email="test@test.com")
-        data = {'comment': 'Updated feedback'}
+        data = {'message': 'Updated feedback'}
         response = self.client.put(f'/api/feedbacks/{feedback.id}/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_partial_update_feedback_not_allowed(self):
         feedback = Feedback.objects.create(name="test", message="test", email="test@test.com")
-        data = {'comment': 'Updated feedback'}
+        data = {'message': 'Updated feedback'}
         response = self.client.patch(f'/api/feedbacks/{feedback.id}/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
@@ -204,6 +209,24 @@ class FeedbackViewSetTests(APITestCase):
         response = self.client.post('/api/feedbacks/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Feedback.objects.count(), 1)
+
+    def test_create_feedback_with_file(self):
+        file_content = b"Test file content"
+        file = SimpleUploadedFile("test_file.txt", file_content, content_type="text/plain")
+        data = self.feedback_data.copy()
+        data['file'] = file
+        response = self.client.post('/api/feedbacks/', data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(Feedback.objects.filter(message="Test feedback").exists())
+        feedback = Feedback.objects.get(message="Test feedback")
+        self.assertTrue(FeedbackAttachment.objects.filter(feedback_id=feedback).exists())
+
+    def test_create_feedback_without_file(self):
+        response = self.client.post('/api/feedbacks/', self.feedback_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(Feedback.objects.filter(message="Test feedback").exists())
+        feedback = Feedback.objects.get(message="Test feedback")
+        self.assertFalse(FeedbackAttachment.objects.filter(feedback_id=feedback).exists())
 
 
 class BookMeetingAPITests(APITestCase):
