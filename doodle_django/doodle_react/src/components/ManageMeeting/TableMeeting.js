@@ -19,7 +19,7 @@ const TableMeeting = ({ selectedColumn, columnSelection, data }) => {
   useEffect(() => {
     axios
       .get(`http://localhost:8000/api/votes/`, {
-        params: { link_token: data.link.token },
+        params: { link_token: data.link_token },
       })
       .then((response) => {
         setVote(response.data);

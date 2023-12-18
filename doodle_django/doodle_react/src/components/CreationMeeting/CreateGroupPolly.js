@@ -183,7 +183,7 @@ const CreateGroupPolly = ({ news }) => {
       video_conferencing: checked,
       start_date: startDate,
       deadline: deadline,
-      timeslots: array_time_slots,
+      time_slots: array_time_slots,
     };
     console.log("Data ", data);
     console.log("Token ", getToken());
@@ -193,13 +193,8 @@ const CreateGroupPolly = ({ news }) => {
         "http://127.0.0.1:8000/api/meetings/",
         data
       );
-      const meetingDetail = {
-        id: meetingResponse.data.id,
-        passcode: meetingResponse.data.passcode,
-        link: meetingResponse.data.link,
-      };
       console.log("response", meetingResponse.data);
-      localStorage.setItem("created_meeting", JSON.stringify(meetingDetail));
+      localStorage.setItem("created_meeting", JSON.stringify(meetingResponse.data));
       navigate(`/manage/${meetingResponse.data.id}`);
       deleteFields();
     } catch (e) {}

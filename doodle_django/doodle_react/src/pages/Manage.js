@@ -10,13 +10,10 @@ const Manage = () => {
 
   useEffect(() => {
     console.log("MANAGE");
-    const passcode = JSON.parse(
-      localStorage.getItem("created_meeting")
-    ).passcode;
 
     let url = `http://127.0.0.1:8000/api/meetings/${meetingId}/`;
     axios
-      .get(url, { params: { passcode: passcode } })
+      .get(url)
       .then((response) => {
         setData(response.data);
       })

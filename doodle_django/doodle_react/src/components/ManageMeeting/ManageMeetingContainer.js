@@ -18,11 +18,11 @@ const ManageMeetingContainer = ({ data }) => {
     let timeslot_id = null;
     //select timeslot
     if (selectedColumn !== undefined && selectedColumn !== "")
-      timeslot_id = data["timeslots"][selectedColumn - 1]["id"];
+      timeslot_id = data["time_slots"][selectedColumn - 1]["id"];
     else navigate("/dashboard");
     try {
       await axios.post(
-        "http://127.0.0.1:8000/api/meeting/" + data["id"] + "/book/",
+        "http://127.0.0.1:8000/api/book/" + data["id"] + "/",
         {
           final_date: timeslot_id,
         },
@@ -35,9 +35,9 @@ const ManageMeetingContainer = ({ data }) => {
   const [selectedColumn, setSelectedColumn] = useState();
 
   useEffect(() => {
-    if (data["final_date"] !== null && data["timeslots"]) {
-      for (let i = 0; i < data["timeslots"].length; ++i) {
-        if (data["final_date"] === data["timeslots"][i]["id"]) {
+    if (data["final_date"] !== null && data["time_slots"]) {
+      for (let i = 0; i < data["time_slots"].length; ++i) {
+        if (data["final_date"] === data["time_slots"][i]["id"]) {
           setSelectedColumn(i + 1);
           return;
         }
