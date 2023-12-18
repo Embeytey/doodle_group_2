@@ -1,7 +1,11 @@
 import React, { useRef, useEffect } from "react";
-import "./header.css";
+
 import { NavLink, Link } from "react-router-dom";
+import { useAuth } from "../Login/AuthProvider";
+
 import Unical from "../images/logo.png";
+
+import "./header.css";
 
 const NAV__LINKS = [
   {
@@ -9,11 +13,11 @@ const NAV__LINKS = [
     url: "/",
   },
   {
-    display: "login",
+    display: "Login",
     url: "/login",
   },
   {
-    display: "logout",
+    display: "Logout",
     url: "/logout",
   },
   {
@@ -24,10 +28,6 @@ const NAV__LINKS = [
     display: "Create",
     url: "/create",
   },
-  // {
-  //   display: "Contact",
-  //   url: "/contact",
-  // },
 ];
 
 const user = JSON.parse(sessionStorage.getItem("user"));
@@ -69,6 +69,8 @@ const Header = () => {
     };
   }, []);
 
+  const { isAuthenticated } = useAuth();
+
   const toggleMenu = () => menuRef.current.classList.toggle("active__menu");
 
   return (
@@ -89,15 +91,35 @@ const Header = () => {
           <div className="nav__menu" ref={menuRef} onClick={toggleMenu}>
             <ul className="nav__list">
               {NAV__LINKS.map((item, index) => (
-                <li className="nav__item" key={index}>
-                  <NavLink
-                    to={item.url}
-                    className={(navClass) =>
-                      navClass.isActive ? "active" : ""
-                    }>
-                    {item.display}
-                  </NavLink>
-                </li>
+                <>
+                  {isAuthenticated && item.display !== "Login" && (
+                    <li className="nav__item" key={index}>
+                      <NavLink
+                        // style={{ color: "white", fontWeight: 700 }}
+                        to={item.url}
+                        className={(navClass) =>
+                          navClass.isActive ? "active" : ""
+                        }>
+                        {item.display}
+                      </NavLink>
+                    </li>
+                  )}
+
+                  {!isAuthenticated &&
+                    item.display !== "Logout" &&
+                    item.display !== "Dashboard" && (
+                      <li className="nav__item" key={index}>
+                        <NavLink
+                          to={item.url}
+                          // style={{ color: "white", fontWeight: 700 }}
+                          className={(navClass) =>
+                            navClass.isActive ? "active" : ""
+                          }>
+                          {item.display}
+                        </NavLink>
+                      </li>
+                    )}
+                </>
               ))}
             </ul>
           </div>

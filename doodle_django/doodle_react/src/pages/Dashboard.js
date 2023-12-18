@@ -11,9 +11,11 @@ const Dashboard = () => {
 
       const response = await axios.get(url);
 
-      if (!response.ok) throw new Error("Meeting not found");
+      if (response.status !== 200) throw new Error("Meeting not found");
 
-      const local_data = await response.json();
+      const local_data = await response.data;
+
+      console.log(local_data[0]["time_slots"].length);
 
       setData(local_data);
     } catch (error) {}

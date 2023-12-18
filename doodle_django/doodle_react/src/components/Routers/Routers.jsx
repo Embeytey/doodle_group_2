@@ -17,7 +17,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "../../App.css";
 
 function Routers() {
-
   const { isAuthenticated } = useAuth();
 
   return (
@@ -51,14 +50,14 @@ function Routers() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute redirectPath="/" isAllowed={isAuthenticated}>
+            <ProtectedRoute redirectPath="/login" isAllowed={isAuthenticated}>
               <Dashboard />
             </ProtectedRoute>
           }
         />
         <Route path="/create" element={<Creation />} />
         <Route path="/manage/:meetingId" element={<Manage />} />
-        <Route path="/preference" element={<Preference />} />
+        {/* <Route path="/preference" element={<Preference />} /> */}
         <Route path="/user/:uuid" element={<User />} />
         <Route path="*" element={<p>There's nothing here: 404!</p>} />
       </Routes>

@@ -185,14 +185,22 @@ const CreateGroupPolly = ({ news }) => {
       deadline: deadline,
       timeslots: array_time_slots,
     };
+    console.log("Data ", data);
+    console.log("Token ", getToken());
+    console.log("Request Headers:", axios.defaults.headers);
     try {
-      await axios.post("http://127.0.0.1:8000/api/meetings/new/", data, {
-        headers: {
-          authorization: `Token ${getToken()}`,
-        },
-      });
-      // alert("Meeting Created successfully!");
-      navigate("/manage");
+      const meetingResponse = await axios.post(
+        "http://127.0.0.1:8000/api/meetings/",
+        data
+      );
+      const meetingDetail = {
+        id: meetingResponse.data.id,
+        passcode: meetingResponse.data.passcode,
+        link: meetingResponse.data.link,
+      };
+      console.log("response", meetingResponse.data);
+      localStorage.setItem("created_meeting", JSON.stringify(meetingDetail));
+      navigate(`/manage/${meetingResponse.data.id}`);
       deleteFields();
     } catch (e) {}
   };

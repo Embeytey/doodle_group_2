@@ -1,11 +1,7 @@
 import "../ManageMeeting/manage.css";
 import * as React from "react";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import calendar_icon from "../images/calendar_icon.png";
-import user from "../images/user.png";
 import profile from "../images/profile.png";
 import trash from "../images/trash.png";
 import { Link } from "react-router-dom";
@@ -72,7 +68,7 @@ const AllMeetings = ({ data }) => {
               <h3>Meetings</h3>
             </Grid>
             <Grid item s={3}>
-              <FormControl sx={{ m: 1, width: "max-content" }}>
+              {/* <FormControl sx={{ m: 1, width: "max-content" }}>
                 <Select
                   style={{ color: "#757575", backgroundColor: "white" }}
                   value={age}
@@ -92,7 +88,7 @@ const AllMeetings = ({ data }) => {
                     Confirmed
                   </MenuItem>
                 </Select>
-              </FormControl>
+              </FormControl> */}
             </Grid>
             <Grid item s={6} style={{ marginLeft: "auto" }}>
               <div style={{ paddingRight: 10, paddingTop: 13 }}>
@@ -126,7 +122,7 @@ const AllMeetings = ({ data }) => {
           )
           .map((meeting) => (
             <Link
-              to={`/user?id=${meeting.id}`}
+              to={`/manage/${meeting.id}`}
               style={{ textDecoration: "inherit", color: "inherit" }}>
               <div className="card_meeting">
                 <Grid container spacing={2}>
@@ -157,12 +153,8 @@ const AllMeetings = ({ data }) => {
                       </h4>
                       <div className="all_meeting_div_img">
                         <img src={calendar_icon} alt="calendar_icon" />
-                        <p>{meeting["timeslots"].length}</p>
+                        <p>{meeting["time_slots"].length}</p>
                       </div>
-                      {/* <div className="all_meeting_div_img">
-                        <img src={user} alt="user" />
-                        <p>n° users</p>
-                      </div> */}
                     </div>
                   </Grid>
                   <Grid

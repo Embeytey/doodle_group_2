@@ -39,7 +39,7 @@ const ManageMeeting = ({ data }) => {
       // Perform the deletion logic immediately
       let url = `http://127.0.0.1:8000/api/meetings/${data.id}/`;
       await axios.delete(url);
-  
+
       // Notify the user with a success message
       toast.success("Meeting deleted successfully", {
         position: "top-right",
@@ -54,13 +54,13 @@ const ManageMeeting = ({ data }) => {
           color: "white",
         },
       });
-  
+
       // After deletion, hide the confirmation box
       setShowDeleteConfirmation(false);
-  
+
       // Navigate to the dashboard
       navigate("/dashboard");
-  
+
       // Display the toast message before reloading the page
       setTimeout(() => {
         window.location.reload();
@@ -71,9 +71,7 @@ const ManageMeeting = ({ data }) => {
       toast.error("Error deleting meeting");
     }
   };
-  
-  
-  
+
   return (
     <div className="CreateGroup">
       <Box sx={{ flexGrow: 1 }}>
@@ -169,6 +167,19 @@ const ManageMeeting = ({ data }) => {
                   }}
                   text="Delete"
                   functionOnClick={onDelete}
+                  variant="contained"
+                />
+              </div>
+              <div style={{ width: "-webkit-fill-available", margin: 20 }}>
+                <SecondaryButton
+                  style={{
+                    width: 100,
+                    margin: 20,
+                    textAlign: "end",
+                    color: "#757575",
+                  }}
+                  text="Vote"
+                  functionOnClick={(e) => navigate("/user/1")}
                   variant="contained"
                 />
               </div>

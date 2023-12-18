@@ -16,6 +16,8 @@ const Login = () => {
         data
       );
       login(response.data.key);
+      console.log(response.data.key);
+      // sessionStorage.addItem("token");
       navigate("/");
     } catch (error) {
       alert(error);

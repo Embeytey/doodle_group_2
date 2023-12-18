@@ -3,9 +3,7 @@ import "./welcome.css";
 import Team from "../components/Welcome/Team";
 import Faq from "../components/Welcome/Faq";
 import Features from "../components/Welcome/Features";
-import FeedbackImage from "../components/Feedback/FeedbackImage";
-import FeedbackFormPage from "../components/Feedback/FeedbackFormPage";
-import FeedbackComponent from "../components/Feedback/FeedbackComponent";
+import { Link } from "react-router-dom";
 
 function Welcome() {
   return (
@@ -44,22 +42,22 @@ function Welcome() {
         <Grid item xs={1}></Grid>
         <Grid item xs={4} style={{ marginTop: "auto", marginBottom: "auto" }}>
           <div>
-            <a href={"/create"} className="no_style_a">
+            <Link to="/create" className="no_style_a">
               <div className="field" id="field_hover">
                 <h2>Create pool</h2>
                 <p>to chose the perfect meeting day</p>
               </div>
-            </a>
+            </Link>
             <br />
             <br />
             <br />
             <br />
-            <a href={"/dashboard"} className="no_style_a">
+            <Link to="/dashboard" className="no_style_a">
               <div className="field" id="field_hover">
                 <h2>Manage pool</h2>
                 <p>to edit and book the perfect day</p>
               </div>
-            </a>
+            </Link>
           </div>
         </Grid>
       </Grid>

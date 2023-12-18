@@ -22,7 +22,7 @@ ANONYMOUS_USERNAME = "anonymous"
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Media dirs
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 
@@ -41,10 +41,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    'X-CSRFTOKEN',
-    'withCredentials'
-]
+CORS_ALLOW_HEADERS = list(default_headers) + ["X-CSRFTOKEN", "withCredentials"]
 
 SECURE_SSL_REDIRECT = False
 
@@ -53,14 +50,14 @@ SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+    "http://localhost:3000",
 ]
 
 CSRF_COOKIE_HTTPONLY = False
 
 CSRF_COOKIE_SECURE = False
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://localhost:8000']
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://localhost:8000"]
 
 # Application definition
 
@@ -71,21 +68,20 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",
-    #third party
+    # "django.contrib.sites",
+    # third party
     "rest_framework",
     "corsheaders",
-    #login
+    # login
     "dj_rest_auth",
     "dj_rest_auth.registration",
     "allauth",
     "allauth.account",
     "rest_framework.authtoken",
-    #app
+    # app
     "doodle_react",
     "doodle_django",
     "api",
-    
 ]
 
 MIDDLEWARE = [
@@ -97,7 +93,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'django.middleware.common.CommonMiddleware',
+    "django.middleware.common.CommonMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
 
@@ -106,7 +102,9 @@ ROOT_URLCONF = "doodle_django.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, 'doodle_react/build'),],
+        "DIRS": [
+            os.path.join(BASE_DIR, "doodle_react/build"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -172,7 +170,7 @@ STATIC_URL = "static/"
 STATIC_ROOT = "staticfiles/"
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'doodle_react/build/static'),
+    os.path.join(BASE_DIR, "doodle_react/build/static"),
 ]
 
 # Default primary key field type
@@ -181,12 +179,14 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json',  # Use application/json instead of multipart/form-data requests
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny',],
-    'DEFAULT_AUTHENTICATION_CLASSES':[
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ]
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",  # Use application/json instead of multipart/form-data requests
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ],
 }
 
 ACCOUNT_EMAIL_REQUIRED = True
