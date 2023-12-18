@@ -8,12 +8,12 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const isAuthState = localStorage.getItem(isAuthenticated);
-    const userState = localStorage.getItem(user);
-    if (isAuthState) {
-      setIsAuthenticated(JSON.parse(isAuthState));
+    const isAuthState = JSON.parse(localStorage.getItem("isAuthenticated"));
+    const userState = JSON.parse(localStorage.getItem("user"));
+    if (!!isAuthState) {
+      setIsAuthenticated(isAuthState);
     }
-    if (userState) {
+    if (!!userState) {
       setUser(userState);
     }
 
@@ -44,6 +44,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     axios.defaults.headers.common["Authorization"] = null;
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('user');
     setIsAuthenticated(false);
   };
 

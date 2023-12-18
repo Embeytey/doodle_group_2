@@ -16,7 +16,7 @@ const Login = () => {
         data
       );
       login(response.data.key);
-      console.log(response.data.key);
+      //console.log(response.data.key);
       // sessionStorage.addItem("token");
       navigate("/");
     } catch (error) {
@@ -38,7 +38,7 @@ const Login = () => {
   };
 
   const handleInputChange = (e) => {
-    console.log(e.target.name);
+    //console.log(e.target.name);
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
   };
