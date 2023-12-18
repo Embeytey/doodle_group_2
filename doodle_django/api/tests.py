@@ -1,195 +1,267 @@
-from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.utils.timezone import datetime, timedelta
 from django.contrib.auth import get_user_model
-from django.urls import reverse
-
+from django.utils.timezone import now, datetime, timedelta
 
 from .models import *
 
-class MeetingViewSetTest(APITestCase):
+class MeetingViewSetTests(APITestCase):
+
     def setUp(self):
-        self.user = get_user_model().objects.create(username='testuser', password='12345')
-        self.token = Token.objects.create(user=self.user)
-        
-        # Create a meeting
-        self.meeting = Meeting.objects.create(
-            user=self.user,
-            video_conferencing=True,
-            title='Example Meeting',
-            description='Discussion on project',
-            location='Conference Room A',
-            duration=timedelta(hours=1, minutes=30),
-            deadline=now() + timedelta(days=15),
-            user_nickname='JohnDoe'
-        )
+        self.user = get_user_model().objects.create(username='test_user', password='test_password')
+        self.client.force_authenticate(user=self.user)
 
-        # Create a schedule poll for the meeting
-        self.schedule_poll = SchedulePoll.objects.create(
-            meeting=self.meeting,
-            voting_start_date=self.meeting.creation_date,
-            voting_deadline=self.meeting.deadline
-        )
-
-        # Create time slots
-        self.time_slot_1 = TimeSlot.objects.create(
-            start_date= now() + timedelta(days=1),
-            end_date= now() + timedelta(days=1, hours=1, minutes=30),
-            schedule_poll=self.schedule_poll
-        )
-
-        self.time_slot_2 = TimeSlot.objects.create(
-            start_date= now() + timedelta(days=2),
-            end_date= now() + timedelta(days=2, hours=1, minutes=30),
-            schedule_poll=self.schedule_poll
-        )
+    def test_list_meetings(self):
+        meeting = Meeting.objects.create(**{
+            "title": "Test Meeting",
+            "description": "Test description",
+            "location": "Test location",
+            "video_conferencing": True,
+            "duration": timedelta(hours=1),
+            "deadline": (now() + timedelta(hours=1)),
+            "user": self.user
+        })
+        response = self.client.get('/api/meetings/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
 
     def test_create_meeting(self):
-        url = reverse('api:meeting-list')
         data = {
-            'title': 'Team Meeting',
-            'description': 'Discuss project progress',
-            'location': 'Conference Room A',
-            'video_conferencing': True,
-            'duration': '01:30:00',
-            'deadline': now() + timedelta(days=15),
-            'timeslots': [
+            "time_slots": [
                 {
-                    'start_date': str(self.time_slot_1.start_date),
-                    'end_date': str(self.time_slot_1.end_date),
+                    "start_date": now().isoformat(),
+                    "end_date": (now() + timedelta(hours=1)).isoformat(),
                 },
-                {
-                    'start_date': str(self.time_slot_2.start_date),
-                    'end_date': str(self.time_slot_2.end_date),
-                }
-            ]
+            ],
+            "title": "Test Meeting",
+            "description": "Test description",
+            "location": "Test location",
+            "video_conferencing": True,
+            "duration": timedelta(hours=1),
+            "deadline": (now() + timedelta(hours=1)).isoformat()
         }
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-        response = self.client.post(url, data, format='json')
+        response = self.client.post('/api/meetings/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Meeting.objects.count(), 1)
+        self.assertEqual(TimeSlot.objects.count(), 1)
 
     def test_update_meeting(self):
-        url = reverse('api:meeting-detail', kwargs={'pk': self.meeting.id})
+        meeting = Meeting.objects.create(**{
+            "title": "Test Meeting",
+            "description": "Test description",
+            "location": "Test location",
+            "video_conferencing": True,
+            "duration": timedelta(hours=1),
+            "deadline": (now() + timedelta(hours=1)),
+            "user": self.user
+        })
+
         data = {
-            'title': 'Updated Title',
-            'description': 'Updated Description',
+            "title": "Updated Title",
+            "description": "Updated description",
+            "location": "Updated location",
+            "video_conferencing": False,
+            "duration": "02:00:00",
+            "deadline": (now() + timedelta(hours=2)).isoformat()
         }
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-        response = self.client.put(url, data, format='json')
+        response = self.client.put(f'/api/meetings/{meeting.id}/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_meeting = Meeting.objects.get(id=meeting.id)
+        self.assertEqual(updated_meeting.title, 'Updated Title')
+        self.assertEqual(updated_meeting.video_conferencing, False)
+
+    def test_create_meeting_no_time_slots(self):
+        data = {
+            "title": "Meeting Without Time Slots",
+            "description": "Description",
+            "location": "Location",
+            "video_conferencing": True,
+            "duration": timedelta(hours=1),
+            "deadline": (now() + timedelta(hours=1)).isoformat()
+        }
+        response = self.client.post('/api/meetings/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Meeting.objects.count(), 0)
 
     def test_retrieve_meeting(self):
-        url = reverse('api:meeting-detail', kwargs={'pk': self.meeting.id})
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-        response = self.client.get(url, format='json')
+        meeting = Meeting.objects.create(**{
+            "title": "Test Meeting",
+            "description": "Test description",
+            "location": "Test location",
+            "video_conferencing": True,
+            "duration": timedelta(hours=1),
+            "deadline": (now() + timedelta(hours=1)),
+            "user": self.user
+        })
+        response = self.client.get(f'/api/meetings/{meeting.id}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], meeting.id)
 
-    def test_delete_meeting(self):
-        url = reverse('api:meeting-detail', kwargs={'pk': self.meeting.id})
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-        response = self.client.delete(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-class VoteViewSetTestCase(APITestCase):
+class VoteViewSetTests(APITestCase):
+
     def setUp(self):
-        # Create a user
-        self.user = get_user_model().objects.create(username='testuser', password='12345')
-        self.token = Token.objects.create(user=self.user)
-
-        # Create a meeting
-        self.meeting = Meeting.objects.create(
-            user=self.token.user,
-            video_conferencing=True,
-            title='Example Meeting',
-            description='Discussion on project',
-            location='Conference Room A',
-            duration=timedelta(hours=2),
-            deadline=now() + timedelta(days=15),
-            user_nickname='JohnDoe'
-        )
-
-        # Create a schedule poll for the meeting
-        self.schedule_poll = SchedulePoll.objects.create(
-            meeting=self.meeting,
-            voting_start_date=self.meeting.creation_date,
-            voting_deadline=self.meeting.deadline
-        )
-
-        # Create a schedule poll link for the meeting
-        self.schedule_poll_link = SchedulePollLink.objects.create(
-            schedule_poll=self.schedule_poll
-        )
-
-        # Create a time slot
+        self.user = get_user_model().objects.create(username='test_user', password='test_password')
+        self.client.force_authenticate(user=self.user)
+        self.meeting = Meeting.objects.create(**{
+            "title": "Test Meeting",
+            "description": "Test description",
+            "location": "Test location",
+            "video_conferencing": True,
+            "duration": timedelta(hours=1),
+            "deadline": (now() + timedelta(hours=1)),
+            "user": self.user
+        })
         self.time_slot = TimeSlot.objects.create(
-            schedule_poll=self.schedule_poll,
+            meeting=self.meeting,
             start_date=now(),
             end_date=now() + timedelta(hours=1)
         )
+        self.preference = Preference.objects.get(description='YES')
+
+    def test_list_votes_with_valid_token(self):
+        link_token = self.meeting.link_token
+        response = self.client.get(f'/api/votes/?link_token={link_token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_list_votes_with_invalid_token(self):
+        invalid_token = uuid.uuid4()
+        response = self.client.get(f'/api/votes/?link_token={invalid_token}')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_create_vote(self):
         data = {
-            'preference': 'YES',
-            'time_slot': {
-                'start_date': self.time_slot.start_date,
-                'end_date': self.time_slot.end_date
-            },
-            'schedule_poll_id': self.schedule_poll.id,
-            'user_nickname': 'JohnDoe'
+            "preference": "YES",
+            "link_token": str(self.meeting.link_token),
+            "time_slot": {
+                "start_date": now().isoformat(),
+                "end_date": (now() + timedelta(hours=1)).isoformat(),
+            }
         }
-
-        url = reverse('api:vote-list')
-
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-        response = self.client.post(url, data, format='json')
+        response = self.client.post('/api/votes/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Vote.objects.count(), 1)
 
-    def test_create_vote_missing_schedule_poll_id(self):
+    def test_create_vote_with_invalid_preference(self):
         data = {
-            'preference': 'NO',
-            'time_slot': {
-                'start_date': self.time_slot.start_date,
-                'end_date': self.time_slot.end_date
-            },
-            'user_nickname': 'JohnDoe'
+            "preference": "INVALID_PREFERENCE",
+            "link_token": str(self.meeting.link_token),
+            "time_slot": {
+                "start_date": now().isoformat(),
+                "end_date": (now() + timedelta(hours=1)).isoformat(),
+            }
         }
+        response = self.client.post('/api/votes/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(Vote.objects.count(), 0) 
 
-        url = reverse('api:vote-list')
+    def test_update_vote(self):
+        vote = Vote.objects.create(user=self.user, preference=self.preference, time_slot=self.time_slot)
+        data = {
+            "preference": "MAYBE",
+        }
+        response = self.client.put(f'/api/votes/{vote.id}/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_vote = Vote.objects.get(id=vote.id)
+        self.assertEqual(updated_vote.preference.description, 'MAYBE')
 
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+class FeedbackViewSetTests(APITestCase):
+
+    def test_get_feedback_not_allowed(self):
+        response = self.client.get('/api/feedbacks/')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_list_feedback_not_allowed(self):
+        response = self.client.get('/api/feedbacks/')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_retrieve_feedback_not_allowed(self):
+        feedback = Feedback.objects.create(name="test", message="test", email="test@test.com")
+        response = self.client.get(f'/api/feedbacks/{feedback.id}/')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_update_feedback_not_allowed(self):
+        feedback = Feedback.objects.create(name="test", message="test", email="test@test.com")
+        data = {'comment': 'Updated feedback'}
+        response = self.client.put(f'/api/feedbacks/{feedback.id}/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_partial_update_feedback_not_allowed(self):
+        feedback = Feedback.objects.create(name="test", message="test", email="test@test.com")
+        data = {'comment': 'Updated feedback'}
+        response = self.client.patch(f'/api/feedbacks/{feedback.id}/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_destroy_feedback_not_allowed(self):
+        feedback = Feedback.objects.create(name="test", message="test", email="test@test.com")
+        response = self.client.delete(f'/api/feedbacks/{feedback.id}/')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_create_feedback_allowed(self):
+        data = {'name':'test', 'message': 'Test feedback', 'email':'test@test.com'}
+        response = self.client.post('/api/feedbacks/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Feedback.objects.count(), 1)
 
 
-class FeedbackViewSetTestCase(APITestCase):
+class BookMeetingAPITests(APITestCase):
+
     def setUp(self):
         self.user = get_user_model().objects.create_user(username='testuser', password='testpassword')
-        self.valid_payload = {
-            'name': 'Test Name',
-            'message': 'Test message',
-            'email': 'test@example.com',
-            'user': self.user.id
-        }
-        self.invalid_payload = {
-            'name': 'Test Name',
-            'message': 'Test message',
-            'email': 'invalid_email',  # Invalid email format
-            'user': self.user.id
-        }
+        self.client.force_authenticate(user=self.user)
+        self.meeting = Meeting.objects.create(**{
+            "title": "Test Meeting",
+            "description": "Test description",
+            "location": "Test location",
+            "video_conferencing": True,
+            "duration": timedelta(hours=1),
+            "deadline": (now() + timedelta(hours=1)),
+            "user": self.user
+        })
+        self.time_slot = TimeSlot.objects.create(start_date=now() + timedelta(minutes=1), end_date=now() + timedelta(hours=1), meeting=self.meeting)
 
-    def test_create_feedback_with_attachment_success(self):
-        temp_file = SimpleUploadedFile("test_file.txt", b"file_content")
-        files = {'file': temp_file}
-        url = reverse('api:feedback-list')
-        response = self.client.post(url, self.valid_payload, format='multipart', files=files)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_book_meeting_with_valid_data(self):
+        data = {"final_date": self.time_slot.id}
+        response = self.client.post(f'/api/book/{self.meeting.id}/', data=data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.meeting.refresh_from_db()
+        self.assertEqual(self.meeting.final_date, self.time_slot)
 
-    def test_create_feedback_with_attachment_invalid_data(self):
-        temp_file = SimpleUploadedFile("test_file.txt", b"file_content")
-        files = {'file': temp_file}
-        url = reverse('api:feedback-list')
-        response = self.client.post(url, self.invalid_payload, format='multipart', files=files)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_book_meeting_invalid_meeting_id(self):
+        invalid_id = 999
+        data = {"final_date": self.time_slot.id}
+        response = self.client.post(f'/api/book/{invalid_id}/', data=data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_book_meeting_invalid_time_slot_id(self):
+        invalid_time_slot_id = 999
+        data = {"final_date": invalid_time_slot_id}
+        response = self.client.post(f'/api/book/{self.meeting.id}/', data=data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_book_meeting_unauthorized_user(self):
+        unauthorized_user = get_user_model().objects.create_user(username='unauthorized', password='testpassword')
+        self.client.force_authenticate(user=unauthorized_user)
+        data = {"final_date": self.time_slot.id}
+        response = self.client.post(f'/api/book/{self.meeting.id}/', data=data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class UserInfoAPITests(APITestCase):
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+        self.client.force_authenticate(user=self.user)
+
+    def test_get_user_info(self):
+        response = self.client.get('/api/user-info/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], self.user.username)
+        self.assertEqual(response.data['email'], self.user.email)
+
+    def test_get_user_info_unauthenticated(self):
+        self.client.logout()
+        response = self.client.get('/api/user-info/')
+        self.assertRedirects(response=response, expected_url="/accounts/login/?next=/api/user-info/", status_code=status.HTTP_302_FOUND)

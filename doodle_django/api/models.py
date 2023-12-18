@@ -10,11 +10,11 @@ class TimeSlot(models.Model):
         primary_key=True,
         db_column="id",
     )
-    schedule_poll = models.ForeignKey(
-        "SchedulePoll",
+    meeting = models.ForeignKey(
+        "Meeting",
         on_delete=models.CASCADE,
         blank=True,
-        db_column="schdule_poll_id",
+        db_column="meeting_id",
     )
     start_date = models.DateTimeField(
         db_column="start_date",
@@ -24,7 +24,7 @@ class TimeSlot(models.Model):
     )
 
     class Meta:
-        unique_together = ("schedule_poll", "start_date", "end_date")
+        unique_together = ("meeting", "start_date", "end_date")
 
 
 class Preference(models.Model):
@@ -69,17 +69,15 @@ class Meeting(models.Model):
         TimeSlot,
         on_delete=models.SET_NULL,
         db_column="final_date",
+        related_name="meetings",
         blank=True,
         null=True,
     )
     deadline = models.DateTimeField(
         db_column="deadline",
     )
-    creation_date = models.DateTimeField(db_column="creation_date", auto_now_add=True)
-    passcode = models.CharField(
-        db_column="passcode",
-        max_length=5,
-    )
+    creation_date = models.DateTimeField(db_column="creation_date", auto_now_add=True),
+
     user = models.ForeignKey(
         get_user_model(),
         db_column="user_id",
@@ -87,27 +85,7 @@ class Meeting(models.Model):
         blank=True,
         null=True,
     )
-
-
-class SchedulePoll(models.Model):
-    id = models.BigAutoField(primary_key=True, db_column="id")
-    voting_start_date = models.DateTimeField()
-    voting_deadline = models.DateTimeField()
-    meeting = models.ForeignKey(
-        to=Meeting, on_delete=models.CASCADE, db_column="meeting_id"
-    )
-
-
-class SchedulePollLink(models.Model):
-    id = models.BigAutoField(primary_key=True, db_column="id")
-    schedule_poll = models.ForeignKey(
-        SchedulePoll,
-        on_delete=models.CASCADE,
-        db_column="schedule_poll_id",
-        blank=True,
-    )
-    token = models.UUIDField(db_column="token", default=uuid.uuid4)
-
+    link_token = models.UUIDField(db_column="link_token", default=uuid.uuid4)
 
 class Vote(models.Model):
     id = models.BigAutoField(primary_key=True, db_column="id")
@@ -124,7 +102,6 @@ class Vote(models.Model):
         blank=True,
         null=True,
     )
-
     class Meta:
         unique_together = ("time_slot", "user")
 

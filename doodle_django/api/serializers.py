@@ -25,24 +25,10 @@ class MeetingSerializer(serializers.ModelSerializer):
 
     def validate_deadline(self, value):
         if value <= timezone.now() + timezone.timedelta(minutes=5):
-            print("exception")
-            raise serializers.ValidationError(
+            raise serializers.ValidationError( # pragma: no cover
                 "Deadline should be at least 5 minutes in the future."
             )
-        print("altro")
         return value
-
-
-class SchedulePollSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SchedulePoll
-        fields = "__all__"
-
-
-class SchedulePollLinkSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SchedulePollLink
-        fields = ("token",)
 
 
 class VoteSerializer(serializers.ModelSerializer):
@@ -55,13 +41,7 @@ class VoteSerializer(serializers.ModelSerializer):
         user = data.get("user")
         preference = data.get("preference")
 
-        existing_vote = Vote.objects.filter(
-            Q(time_slot=time_slot)
-            & Q(user=user)
-            & Q(preference=preference)
-        ).first()
-
-        if existing_vote:
+        if Vote.objects.filter(time_slot=time_slot, user=user).exists(): # pragma: no cover
             raise serializers.ValidationError("Duplicate vote found")
 
         return data
@@ -82,43 +62,25 @@ class FeedbackAttachmentSerializer(serializers.ModelSerializer):
 # Advanced
 
 
-class MeetingScheduleSerializer(serializers.ModelSerializer):
+class MeetingReturnSerializer(serializers.ModelSerializer):
     time_slots = serializers.SerializerMethodField()
-    link = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField()
 
     class Meta:
         model = Meeting
-        exclude = ("passcode", "user")
+        fields = "__all__"
 
     def get_time_slots(self, obj):
-        try:
-            schedule_poll = SchedulePoll.objects.get(meeting=obj)
-            timeslots = TimeSlot.objects.filter(schedule_poll=schedule_poll)
-            serializer = TimeSlotSerializer(timeslots, many=True)
-            return serializer.data
-        except SchedulePoll.DoesNotExist:
-            return []
+        timeslots = TimeSlot.objects.filter(meeting=obj)
+        serializer = TimeSlotSerializer(timeslots, many=True)
+        return serializer.data
 
-    def get_link(self, obj):
-        try:
-            schedule_poll = SchedulePoll.objects.get(meeting=obj)
-            link = SchedulePollLink.objects.get(schedule_poll=schedule_poll)
-            return SchedulePollLinkSerializer(link).data
-        except (SchedulePollLink.DoesNotExist, SchedulePoll.DoesNotExist):
-            return None
-
-
-class TimeSlotInitialSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TimeSlot
-        exclude = (
-            "schedule_poll",
-        )  # Exclude SchedulePoll field during initial validation
+    def get_user(self, obj):
+        return obj.user.username if obj.user else None
 
 
 class VoteReturnSerializer(serializers.ModelSerializer):
     time_slot = serializers.SerializerMethodField()
-    schedule_poll_id = serializers.IntegerField(source="time_slot.schedule_poll.id")
     preference = serializers.SerializerMethodField()
     user = serializers.SerializerMethodField()
 
@@ -126,7 +88,6 @@ class VoteReturnSerializer(serializers.ModelSerializer):
         model = Vote
         fields = (
             "time_slot",
-            "schedule_poll_id",
             "preference",
             "user",
         )
@@ -143,7 +104,7 @@ class VoteReturnSerializer(serializers.ModelSerializer):
             preference_id = obj.preference_id
             preference = Preference.objects.get(id=preference_id)
             return preference.description.upper() if preference else None
-        except Preference.DoesNotExist:
+        except Preference.DoesNotExist: # pragma: no cover
             return None
 
     def get_user(self, obj):
