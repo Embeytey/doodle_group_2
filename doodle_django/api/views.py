@@ -296,6 +296,8 @@ class FeedbackViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         data = request.data
+        if request.user.is_authenticated:
+            data["user"] = request.user.id
         serializer = FeedbackSerializer(data=data)
         if serializer.is_valid():
             feedback = serializer.save()
