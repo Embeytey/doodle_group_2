@@ -201,7 +201,7 @@ const TableMeeting = ({ selectedColumn, columnSelection, data }) => {
         <thead>
           <tr>
             {timeslots.map((value, index) => {
-              console.log("ts", timeslots);
+              // console.log("ts", timeslots);
               let start = null;
               let end = null;
 

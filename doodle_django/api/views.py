@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from django.shortcuts import redirect
 from django.utils.crypto import get_random_string
+from django.db import transaction
 from django.contrib.auth.decorators import login_required
 
 from .models import *
@@ -179,70 +180,89 @@ class VoteViewSet(viewsets.ModelViewSet):
                 {"error": "No Meeting found for current token."}, status=status.HTTP_404_NOT_FOUND
             ) 
 
+    @transaction.atomic
     def create(self, request, *args, **kwargs):
         '''
         usage:
-        post ../api/votes/
+        post ../api/votes/ or post ../api/votes/?link_token=token
         request body:
         {
-            "preference": "YES/MAYBE/NO",
             "link_token": token,
-            "time_slot": {
-                "start_date": "dd-MM-yyyy-hh-mm",
-                "end_date": "dd-MM-yyyy-hh-mm",
-            }
+            "votes": [
+                {
+                    "preference": "YES/MAYBE/NO",
+                    "time_slot": {
+                        "start_date": "dd-MM-yyyy-hh-mm",
+                        "end_date": "dd-MM-yyyy-hh-mm",
+                    }
+                },
+            ]
         }
         if time slot does not exists, it gets created by this api.
         '''
-
-        preference = request.data.get("preference")
-        time_slot_data = request.data.get("time_slot", {})
         link_token = request.data.get("link_token")
+        votes_data = request.data.get("votes", [])
 
         if link_token is None:
-            return Response( # pragma: no cover
-                {"error": "Link token is required."}, status=status.HTTP_404_NOT_FOUND
+            return Response(
+                {"error": "Link token is required."},
+                status=status.HTTP_400_BAD_REQUEST
             )
 
-        meeting = None
-
         try:
-            link_token = uuid.UUID(link_token)        
+            link_token = uuid.UUID(link_token)
             meeting = Meeting.objects.get(link_token=link_token)
-        except Meeting.DoesNotExist: # pragma: no cover
-            return Response( 
-                {"error": "No Meeting found for current token."}, status=status.HTTP_404_NOT_FOUND
-            )
-
-        try:
-            preference_instance = Preference.objects.get(description__iexact=preference)
-        except Preference.DoesNotExist:
+        except Meeting.DoesNotExist:
             return Response(
-                {"error": "Preference does not exist"}, status=status.HTTP_404_NOT_FOUND
+                {"error": "No Meeting found for the provided token."},
+                status=status.HTTP_404_NOT_FOUND
             )
 
-        time_slot_instance, created = TimeSlot.objects.get_or_create(
-            meeting=meeting,
-            start_date=time_slot_data.get("start_date"),
-            end_date=time_slot_data.get("end_date"),
-        )
+        response_data = []
 
-        vote_serializer = VoteSerializer(
-            data={
-                "user": request.user.id,
-                "preference": preference_instance.id,
-                "time_slot": time_slot_instance.id,
-            }
-        )
+        for vote_data in votes_data:
+            preference_desc = vote_data.get("preference")
+            time_slot_data = vote_data.get("time_slot", {})
+            preference_instance = None
+            
+            try:
+                preference_instance = Preference.objects.get(description__iexact=preference_desc)
+            except Preference.DoesNotExist:
+                return Response(
+                    {"error": f"Preference '{preference_desc}' does not exist."},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
 
-        if vote_serializer.is_valid():
-            vote_instance = vote_serializer.save()
-            return Response(
-                VoteReturnSerializer(vote_instance).data, status=status.HTTP_201_CREATED
+            time_slot_instance, created = TimeSlot.objects.get_or_create(
+                meeting=meeting,
+                start_date=time_slot_data.get("start_date"),
+                end_date=time_slot_data.get("end_date"),
             )
 
-        else:
-            return Response(vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST) # pragma: no cover
+            existing_vote = Vote.objects.filter(time_slot=time_slot_instance, user=request.user).first()
+            
+            if existing_vote:
+                existing_vote.preference = preference_instance
+                existing_vote.save()
+                response_data.append(VoteReturnSerializer(existing_vote).data)
+            else:
+                vote_serializer = VoteSerializer(
+                    data={
+                        "user": request.user.id,
+                        "preference": preference_instance.id,
+                        "time_slot": time_slot_instance.id,
+                    }
+                )
+
+                if vote_serializer.is_valid():
+                    vote_instance = vote_serializer.save()
+                    response_data.append(VoteReturnSerializer(vote_instance).data)
+                else:
+                    return Response(
+                        vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                    )
+
+        return Response(response_data, status=status.HTTP_201_CREATED)
 
 
     def update(self, request, *args, **kwargs):

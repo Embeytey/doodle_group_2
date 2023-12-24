@@ -179,7 +179,7 @@ const ManageMeeting = ({ data }) => {
                     color: "#757575",
                   }}
                   text="Vote"
-                  functionOnClick={(e) => navigate("/user/1")}
+                  functionOnClick={(e) => navigate("/user/" + data["link_token"])}
                   variant="contained"
                 />
               </div>

@@ -5,6 +5,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import { grey } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
+import axios from "axios";
 
 const TableMeetingUser = ({
   selectedColumn,
@@ -37,6 +38,21 @@ const TableMeetingUser = ({
       return newValues;
     });
 
+    /*
+    {
+            "link_token": token,
+            "votes": [
+                {
+                    "preference": "YES/MAYBE/NO",
+                    "time_slot": {
+   }                     "start_date": "dd-MM-yyyy-hh-mm",
+                        "end_date": "dd-MM-yyyy-hh-mm",
+                    }
+                },
+            ]
+        
+    */
+
     // Construct the selectedDates array based on checkbox values
     const newSelectedDates = time_slots.map((time_slot, i) => ({
       start_date: time_slot.start_date,
@@ -57,43 +73,40 @@ const TableMeetingUser = ({
   const [selectedDates, setSelectedDates] = useState(time_slots);
 
   const handleSubmit = async () => {
+
     const preferences = {
-      selected_timeslots: selectedDates.map((time_slot, index) => ({
-        start_date: time_slot.start_date,
-        end_date: time_slot.end_date,
+      link_token : data["link_token"],
+      votes: selectedDates.map((time_slot, index) => ({
+        time_slot: {
+          start_date: time_slot.start_date,
+          end_date: time_slot.end_date,
+        },
         preference:
           checkboxValues[index] === true
             ? "yes"
             : checkboxValues[index] === "maybe"
             ? "maybe"
             : "no",
-      })),
+      }))
     };
 
     console.log("Submitting Preferences:", preferences);
 
     try {
-      const response = await fetch(
-        "http://localhost:8000/api/save-preferences/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(preferences),
-        }
-      );
+      const response = await axios.post(
+        "http://localhost:8000/api/votes/", preferences);
 
-      if (!response.ok) {
-        console.log("Preferences submitted successfully!");
-        setCheckboxValues(
-          Array.from({ length: time_slots.length }, () => false)
-        );
-        setSelectedDates(time_slots);
-        onSubmit(true);
-      } else {
-        const errorData = await response.json();
-        console.error("Failed to submit preferences:", errorData);
+        
+        if (response.ok) {
+          console.log("response", response);
+          console.log("Preferences submitted successfully!");
+          setCheckboxValues(
+            Array.from({ length: time_slots.length }, () => false)
+          );
+          setSelectedDates(time_slots);
+          onSubmit(true);
+        } else {
+          console.error("Failed to submit preferences:", response);
       }
     } catch (error) {
       console.error("Error submitting preferences:", error);
