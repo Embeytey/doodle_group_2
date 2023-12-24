@@ -215,7 +215,7 @@ class VoteViewSet(viewsets.ModelViewSet):
             )
 
         try:
-            preference_instance = Preference.objects.get(description=preference)
+            preference_instance = Preference.objects.get(description__iexact=preference)
         except Preference.DoesNotExist:
             return Response(
                 {"error": "Preference does not exist"}, status=status.HTTP_404_NOT_FOUND
