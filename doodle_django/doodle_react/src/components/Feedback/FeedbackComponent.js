@@ -1,12 +1,13 @@
+import React, { useState } from "react";
 import FeedbackFormPage from "./FeedbackFormPage";
 import FeedbackImage from "./FeedbackImage";
-import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const FeedbackComponent = () => {
   const [formVisibility, setFormVisibility] = useState(false);
 
   const feedbackImageClick = () => {
-    formVisibility ? setFormVisibility(false) : setFormVisibility(true);
+    setFormVisibility(!formVisibility);
   };
 
   return (
@@ -14,9 +15,11 @@ const FeedbackComponent = () => {
       {formVisibility ? (
         <FeedbackFormPage setFormVisibility={setFormVisibility} />
       ) : (
-        <div></div>
+        <div>
+          {/* <Link to="/feedback-list">View Feedback List</Link> */}
+          <FeedbackImage feedbackImageClick={feedbackImageClick} />
+        </div>
       )}
-      <FeedbackImage feedbackImageClick={feedbackImageClick} />
     </div>
   );
 };

@@ -21,4 +21,11 @@ urlpatterns = [
     path('', include(router.urls)),
     path('book/<str:meeting_id>/', api_book, name='api_book'),
     path('user-info/', api_user_info, name='user-info'),
+    path('api/votes/', VoteViewSet.as_view({'post': 'create'}), name='create-vote'),
+    path('api/votes/<uuid:pk>/', VoteViewSet.as_view({'put': 'update'}), name='update-vote'),
 ]
+
+
+
+
+

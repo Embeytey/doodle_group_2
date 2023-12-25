@@ -3,7 +3,7 @@ import axios from "axios";
 import { AuthProvider } from "./components/Login/AuthProvider";
 import "./index.css";
 import "./App.css";
-
+import './components/Feedback/styles.css'; // Import the CSS file
 function App() {
   //axios defaults
   axios.defaults.headers.common['withCredentials'] = true;

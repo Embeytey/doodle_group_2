@@ -1,0 +1,97 @@
+/* styles.css */
+.feedback-list {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .feedback-entry {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .user-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .user-id,
+  .user-name {
+    font-weight: bold;
+  }
+  
+  .message {
+    margin: 0;
+  }
+  /* styles.css */
+/* ... (existing styles) */
+
+.search-container {
+    margin-bottom: 20px;
+  }
+  
+  .search-container input {
+    padding: 8px;
+    margin-right: 10px;
+  }
+  
+  .search-container button {
+    padding: 8px 12px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* styles.css */
+/* ... (existing styles) */
+
+.search-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .search-bar input {
+    flex-grow: 1;
+    margin-right: 10px;
+  }
+  
+  .search-bar button {
+    cursor: pointer;
+  }
+  
+  .feedback {
+    /* background: url(../../public/time.jpg); */
+    margin-top: 120px;
+    margin-left: 400px;
+    margin-right: 400px;
+    box-shadow: 7px 2px 20px -7px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 7px 2px 20px -7px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 7px 2px 20px -7px rgba(0, 0, 0, 0.75);
+    background-color: #d1c3bb;
+  }
+  
+  .feedback .h2 {
+    color: black;
+  }
+  
+  .feedback .Button {
+    background-color: #d1c3bb;
+  }
+  
+  @media (max-width: 600px) {
+    .feedback {
+      margin-left: 5%;
+      margin-right: 5%;
+    }
+  }
+  
+  @media (max-width: 400px) {
+    .feedback {
+      margin-left: 2%;
+      margin-right: 2%;
+    }
+  }
+  

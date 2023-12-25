@@ -11,7 +11,8 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .serializers import *
 from .permissions import *
-
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 class MeetingViewSet(viewsets.ModelViewSet):
     queryset = Meeting.objects.all()
@@ -290,6 +291,70 @@ class VoteViewSet(viewsets.ModelViewSet):
         return Response(VoteReturnSerializer(instance).data, status=status.HTTP_200_OK)
 
 
+# class FeedbackViewSet(viewsets.ModelViewSet):
+#     queryset = Feedback.objects.all()
+#     serializer_class = FeedbackSerializer
+    
+
+#     def create(self, request, *args, **kwargs):
+#         data = request.data
+#         if request.user.is_authenticated:
+#             data["user"] = request.user.id
+#         serializer = FeedbackSerializer(data=data)
+#         if serializer.is_valid():
+#             feedback = serializer.save()
+#             for file in request.FILES.values():
+#                 FeedbackAttachment.objects.create(
+#                     feedback=feedback,
+#                     file=file
+#                 )
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+#     @action(detail=False, methods=['get'])
+#     def list_feedback_entries(self, request, *args, **kwargs):
+#         """
+#         Retrieve a list of feedback entries.
+#         """
+#         feedback_entries = Feedback.objects.all()
+#         serializer = FeedbackSerializer(feedback_entries, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)    
+
+#     def get(self, request, *args, **kwargs):
+#         return Response( # pragma: no cover
+#             {"error": "GET method not allowed"},
+#             status=status.HTTP_405_METHOD_NOT_ALLOWED,
+#         )
+
+#     def list(self, request, *args, **kwargs):
+#         return Response(
+#             {"error": "List method not allowed"},
+#             status=status.HTTP_405_METHOD_NOT_ALLOWED,
+#         )
+
+#     def retrieve(self, request, *args, **kwargs):
+#         return Response(
+#             {"error": "Retrieve method not allowed"},
+#             status=status.HTTP_405_METHOD_NOT_ALLOWED,
+#         )
+
+#     def update(self, request, *args, **kwargs):
+#         return Response(
+#             {"error": "Update method not allowed"},
+#             status=status.HTTP_405_METHOD_NOT_ALLOWED,
+#         )
+
+#     def partial_update(self, request, *args, **kwargs):
+#         return Response(
+#             {"error": "Partial update method not allowed"},
+#             status=status.HTTP_405_METHOD_NOT_ALLOWED,
+#         )
+
+#     def destroy(self, request, *args, **kwargs):
+#         return Response(
+#             {"error": "Delete method not allowed"},
+#             status=status.HTTP_405_METHOD_NOT_ALLOWED,
+#         )
+
 class FeedbackViewSet(viewsets.ModelViewSet):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
@@ -308,24 +373,19 @@ class FeedbackViewSet(viewsets.ModelViewSet):
                 )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def get(self, request, *args, **kwargs):
-        return Response( # pragma: no cover
-            {"error": "GET method not allowed"},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED,
-        )
-
     def list(self, request, *args, **kwargs):
-        return Response(
-            {"error": "List method not allowed"},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED,
-        )
+        feedbacks = self.queryset.all()
+        serializer = self.get_serializer(feedbacks, many=True)
+        return Response(serializer.data)
 
+    # Use the standard retrieve method to get a single feedback entry
     def retrieve(self, request, *args, **kwargs):
-        return Response(
-            {"error": "Retrieve method not allowed"},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED,
-        )
+        return super().retrieve(request, *args, **kwargs)
 
+    # Use the standard destroy method to delete a feedback entry
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
+    
     def update(self, request, *args, **kwargs):
         return Response(
             {"error": "Update method not allowed"},
@@ -338,13 +398,7 @@ class FeedbackViewSet(viewsets.ModelViewSet):
             status=status.HTTP_405_METHOD_NOT_ALLOWED,
         )
 
-    def destroy(self, request, *args, **kwargs):
-        return Response(
-            {"error": "Delete method not allowed"},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED,
-        )
-
-
+    
 @api_view(["POST"])
 @login_required
 def api_book(request, meeting_id):

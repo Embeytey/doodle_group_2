@@ -28,6 +28,10 @@ const NAV__LINKS = [
     display: "Create",
     url: "/create",
   },
+  {
+    display: "Feedback",
+    url: "/feedback-list",
+  },
 ];
 
 const user = JSON.parse(sessionStorage.getItem("user"));

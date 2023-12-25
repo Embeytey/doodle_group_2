@@ -27,6 +27,7 @@ function Navbar() {
       title: isLoggedIn ? "Logout" : "Register",
       link: isLoggedIn ? "/logout" : "/register",
     },
+    { id: "4", title: "/Feedback", link: "/feedback-list" },
   ];
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -88,7 +89,7 @@ function Navbar() {
                 </MenuItem>
               ))}
               {/* <Link to="/login">
-                <Button>Login</Button>
+                <Button>Login</Buttonmmm>
               </Link> */}
             </Menu>
           </Box>

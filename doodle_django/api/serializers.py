@@ -47,10 +47,19 @@ class VoteSerializer(serializers.ModelSerializer):
         return data
 
 
+# serializers.py
+
+from rest_framework import serializers
+from .models import Feedback
+
 class FeedbackSerializer(serializers.ModelSerializer):
+    # Assuming your User model has fields 'id', 'name', etc.
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
+    user_name = serializers.CharField(source='user.name', read_only=True)
+
     class Meta:
         model = Feedback
-        fields = "__all__"
+        fields = ['id', 'user_id', 'user_name', 'name', 'message', 'creation_date', 'email', 'user']
 
 
 class FeedbackAttachmentSerializer(serializers.ModelSerializer):
