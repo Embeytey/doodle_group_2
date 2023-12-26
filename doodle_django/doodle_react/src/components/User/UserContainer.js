@@ -11,7 +11,6 @@ import TableMeetingUser from "../User/TableMeetingUser";
 import Button from "@mui/material/Button";
 import { grey } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
-import axios from "axios";
 import Preference from "../../pages/Preference";
 
 const User = ({ news, data }) => {
@@ -23,11 +22,9 @@ const User = ({ news, data }) => {
     },
   }));
 
-  const getToken = () => sessionStorage.getItem("token");
+  // const getToken = () => sessionStorage.getItem("token");
   const [submitsucess, setSubmitSucess] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState([]);
-  const [checkboxValues, setCheckboxValues] = useState([]);
-  const [selectedDates, setSelectedDates] = useState([]);
 
   useEffect(() => {
     if (data["final_date"] !== null && data["timeslots"]) {
@@ -39,6 +36,7 @@ const User = ({ news, data }) => {
       }
     }
   }, [data]);
+  const [checkboxValues, setCheckboxValues] = useState([]);
 
   const columnSelection = (columnName) => {
     if (columnName !== 0) {
@@ -51,7 +49,30 @@ const User = ({ news, data }) => {
   };
 
   const handleSubmit = async (value) => {
+    console.log("onSubmit value received:", value);
     setSubmitSucess(value);
+  };
+  const [viewList, setviewList]=useState(false);
+
+  const viewLists = () => {
+    // This function is called with the handleUpdateInternal function from TableMeetingUser
+    // It can be stored and used later when the "Update Preferences" button is clicked
+    setviewList(true);
+  console.log("Update Value",viewLists)
+  };
+  const [updatepreferncetest,setUpdatedPreferenceTest]=useState(false);
+  // const handleUpdate = () => {
+  //   // Handle the update logic if needed
+  //   console.log("Update Preferences button clicked!");
+  // };
+
+ 
+  const handleUpdate = () => {
+    // This function is called with the handleUpdateInternal function from TableMeetingUser
+    // It can be stored and used later when the "Update Preferences" button is clicked
+    setUpdatedPreferenceTest(true);
+    setSubmitSucess(false)
+  console.log("Update Value",updatepreferncetest)
   };
 
   return (
@@ -79,22 +100,37 @@ const User = ({ news, data }) => {
                     columnSelection={columnSelection}
                     checkboxValues={checkboxValues}
                     setCheckboxValues={setCheckboxValues}
-                    selectedDates={selectedDates}
-                    setSelectedDates={setSelectedDates}
                   />
                 )}
                 {submitsucess && (
-                  <h2>Your vote has been counted successfully!</h2>
+                   <div>
+                   <h2>Your vote has been counted successfully!</h2>
+                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <ColorButton onClick={handleUpdate}>Change Your Response</ColorButton>
+                    <ColorButton onClick={viewLists}>View Vote List</ColorButton>
+                  </div>
+                  {viewList && <UserPreference data={data} /> }
+                  {viewList && <TableMeetingUser
+                    // onSubmit={handleSubmit}
+                    data={data}
+                    selectedColumn={selectedColumn}
+                    columnSelection={columnSelection}
+                    checkboxValues={checkboxValues}
+                    setCheckboxValues={setCheckboxValues}
+                    viewList={viewList}
+                  />}
+                   {updatepreferncetest &&!submitsucess && <TableMeetingUser
+                    onSubmit={handleSubmit}
+                    data={data}
+                    selectedColumn={selectedColumn}
+                    columnSelection={columnSelection}
+                    
+                  />}
+                 </div>
                 )}
               </Box>
               <div style={{ textAlign: "end" }}>
-                {/* Use the handleSubmit function from props */}
-                {/* <ColorButton
-                  style={{ margin: 20, textAlign: "end" }}
-                  onClick={handleSubmit}
-                  variant="contained"
-                >
-                </ColorButton> */}
+                
               </div>
             </div>
             <div style={{ paddingTop: 30 }}>

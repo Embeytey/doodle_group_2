@@ -58,16 +58,23 @@ const Header = () => {
         document.body.scrollTop > 80 ||
         document.documentElement.scrollTop > 80
       ) {
-        headerRef.current.classList?.add("header__shrink", null);
+        if (headerRef.current) { // Add this conditional check
+          headerRef.current.classList?.add("header__shrink", null);
+          console.log(headerRef); // Log the object to the console
+          console.log(headerRef.classList); // Try to access classList
+        }
       } else {
-        headerRef.current.classList?.remove("header__shrink", null);
+        if (headerRef.current) { // Add this conditional check
+          headerRef.current.classList?.remove("header__shrink", null);
+        }
       }
     });
-
+  
     return () => {
       window.removeEventListener("scroll", null);
     };
   }, []);
+  
 
   const { isAuthenticated } = useAuth();
 

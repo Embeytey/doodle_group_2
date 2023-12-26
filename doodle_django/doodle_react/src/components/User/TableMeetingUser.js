@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import user from "../images/user.png";
 import "../ManageMeeting/manage.css";
 import Checkbox from "@mui/material/Checkbox";
@@ -12,7 +12,14 @@ const TableMeetingUser = ({
   columnSelection,
   data,
   onSubmit,
+  
+  checkboxValues,  // Pass checkboxValues as a prop
+  setCheckboxValues,
+  viewList,
+  
 }) => {
+  console.log("viewList:", viewList);
+  
   const ColorButton = styled(Button)(({ theme }) => ({
     color: theme.palette.getContrastText(grey[600]),
     backgroundColor: grey[600],
@@ -24,35 +31,21 @@ const TableMeetingUser = ({
     ? data["time_slots"]
     : [];
 
-  console.log("Data:", data);
+  // console.log("Data:", data);
   console.log("Time Slots:", data["time_slots"]);
   const handleCheckboxToggle = (index) => {
-    setCheckboxValues((prevValues) => {
-      const newValues = [...prevValues];
-      const currentValue = newValues[index];
-
-      // Toggle checkbox value
-      newValues[index] =
-        currentValue === false ? true : currentValue === true ? "maybe" : false;
-
-      return newValues;
-    });
-
-    /*
-    {
-            "link_token": token,
-            "votes": [
-                {
-                    "preference": "YES/MAYBE/NO",
-                    "time_slot": {
-   }                     "start_date": "dd-MM-yyyy-hh-mm",
-                        "end_date": "dd-MM-yyyy-hh-mm",
-                    }
-                },
-            ]
-        
-    */
-
+    if (!viewList) {
+      setCheckboxValues((prevValues) => {
+        const newValues = [...prevValues];
+        const currentValue = newValues[index];
+  
+        // Toggle checkbox value
+        newValues[index] =
+          currentValue === false ? true : currentValue === true ? "maybe" : false;
+  
+        return newValues;
+      });
+    }
     // Construct the selectedDates array based on checkbox values
     const newSelectedDates = time_slots.map((time_slot, i) => ({
       start_date: time_slot.start_date,
@@ -67,52 +60,46 @@ const TableMeetingUser = ({
 
     setSelectedDates(newSelectedDates);
   };
-  const [checkboxValues, setCheckboxValues] = useState(
-    Array.from({ length: time_slots.length }, () => false)
-  );
+  
   const [selectedDates, setSelectedDates] = useState(time_slots);
 
   const handleSubmit = async () => {
+    if (!viewList) {
+      const preferences = {
+        link_token: data["link_token"],
+        votes: selectedDates.map((time_slot, index) => ({
+          time_slot: {
+            start_date: time_slot.start_date,
+            end_date: time_slot.end_date,
+          },
+          preference:
+            checkboxValues[index] === true
+              ? "yes"
+              : checkboxValues[index] === "maybe"
+              ? "maybe"
+              : "no",
+        }))
+      };
 
-    const preferences = {
-      link_token : data["link_token"],
-      votes: selectedDates.map((time_slot, index) => ({
-        time_slot: {
-          start_date: time_slot.start_date,
-          end_date: time_slot.end_date,
-        },
-        preference:
-          checkboxValues[index] === true
-            ? "yes"
-            : checkboxValues[index] === "maybe"
-            ? "maybe"
-            : "no",
-      }))
-    };
+      console.log("Submitting Preferences:", preferences);
 
-    console.log("Submitting Preferences:", preferences);
+      try {
+        const response = await axios.post("http://localhost:8000/api/votes/", preferences);
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/votes/", preferences);
-
-        
-        if (response.ok) {
-          console.log("response", response);
+        if (response.status === 201 || response.status === 200) {
+          // Success
           console.log("Preferences submitted successfully!");
-          setCheckboxValues(
-            Array.from({ length: time_slots.length }, () => false)
-          );
-          setSelectedDates(time_slots);
           onSubmit(true);
         } else {
-          console.error("Failed to submit preferences:", response);
+          console.error("Failed to submit preferences. Status:", response.status, "Data:", response.data);
+        }
+      } catch (error) {
+        console.error("Error submitting preferences:", error);
       }
-    } catch (error) {
-      console.error("Error submitting preferences:", error);
     }
+    
   };
-
+  
   return (
     <div>
       <table
@@ -130,18 +117,18 @@ const TableMeetingUser = ({
               const startDate = new Date(value["start_date"]);
               const endDate = new Date(value["end_date"]);
 
-              const startOptions = {
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-              };
+              // const startOptions = {
+              //   year: "numeric",
+              //   month: "numeric",
+              //   day: "numeric",
+              //   hour: "numeric",
+              //   minute: "numeric",
+              // };
 
-              const endOptions = {
-                hour: "numeric",
-                minute: "numeric",
-              };
+              // const endOptions = {
+              //   hour: "numeric",
+              //   minute: "numeric",
+              // };
 
               const formattedStartDate = new Intl.DateTimeFormat("en-US", {
                 year: "numeric",
@@ -232,19 +219,38 @@ const TableMeetingUser = ({
       </table>
 
       {/* Buttons for testing */}
+      {!viewList && (
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           marginTop: "20px",
         }}>
-        <ColorButton
+      
+      {/* {updatepreferncetest &&  <ColorButton
           style={{ margin: 20, textAlign: "end" }}
           onClick={handleSubmit}
           variant="contained">
           submit
         </ColorButton>
+      } */}
+      {/* <ColorButton
+          style={{ margin: 20, textAlign: "end" }}
+          onClick={handleSubmit}
+          variant="contained">
+          submit
+        </ColorButton> */}
+        
+          <ColorButton
+            style={{ margin: 20, textAlign: "end" }}
+            onClick={handleSubmit}
+            variant="contained"
+          >
+            submit
+          </ColorButton>
+        
       </div>
+      )}
     </div>
   );
 };
