@@ -27,16 +27,28 @@ class MeetingViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         '''
         usage:
-        get ../api/meetings/
-
-        only the meetings created by the user will be returned
+        get ../api/meetings/      to get all the meetings created by an user
+        or
+        get ../api/meetings/?link_token=token    to get a meeting using the token
         '''
 
-        meetings = Meeting.objects.filter(user=request.user)
-        return Response(
-            MeetingReturnSerializer(meetings, many=True).data,
-            status=status.HTTP_200_OK,
-        )
+        link_token = request.query_params.get('link_token')
+        if link_token:
+            try:
+                link_token = uuid.UUID(link_token, version=4)
+                meeting = Meeting.objects.get(link_token=link_token)
+            except ValueError:
+                return Response({'error': 'Invalid link_token provided'}, status=status.HTTP_400_BAD_REQUEST)
+            except Meeting.DoesNotExist:
+                return Response({"error": "No Meeting found for current token."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(MeetingReturnSerializer([meeting], many=True).data, status=status.HTTP_200_OK)
+
+        else:
+            meetings = Meeting.objects.filter(user=request.user)
+            return Response(
+                MeetingReturnSerializer(meetings, many=True).data,
+                status=status.HTTP_200_OK,
+            )
 
     def create(self, request, *args, **kwargs):
         '''
