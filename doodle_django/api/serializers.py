@@ -76,7 +76,12 @@ class MeetingReturnSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_user(self, obj):
-        return obj.user.username if obj.user else None
+        if obj.user:
+            return {
+                "username" : obj.user.username if obj.user.username else None,
+                "email": obj.user.email if obj.user.email else None
+            }
+        return None
 
 
 class VoteReturnSerializer(serializers.ModelSerializer):
@@ -108,7 +113,12 @@ class VoteReturnSerializer(serializers.ModelSerializer):
             return None
 
     def get_user(self, obj):
-        return obj.user.username if obj.user else None
+        if obj.user:
+            return {
+                "username" : obj.user.username if obj.user.username else None,
+                "email": obj.user.email if obj.user.email else None
+            }
+        return None
 
 
 class DateTimeSerializer(serializers.Serializer):
