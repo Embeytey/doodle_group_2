@@ -55,9 +55,16 @@ function Routers() {
             </ProtectedRoute>
           }
         />
-        <Route path="/create" element={<Creation />} />
-        <Route path="/manage/:meetingId" element={<Manage />} />
-        {/* <Route path="/preference" element={<Preference />} /> */}
+        <Route path="/create" element={
+          <ProtectedRoute redirectPath="/login" isAllowed={isAuthenticated}>
+              <Creation />
+           </ProtectedRoute>}
+        />
+        <Route path="/manage/:meetingId" element={
+          <ProtectedRoute redirectPath="/login" isAllowed={isAuthenticated}>
+            <Manage />
+          </ProtectedRoute>}
+        />
         <Route path="/user/:uuid" element={<User />} />
         <Route path="*" element={<p>There's nothing here: 404!</p>} />
       </Routes>
