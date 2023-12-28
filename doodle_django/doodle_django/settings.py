@@ -124,16 +124,22 @@ WSGI_APPLICATION = "doodle_django.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Doodle',
-        'USER': 'postgres', 
-          
- # Read from environment variable
-        'PASSWORD': 'Sabi@1221',   # Read from environment variable
-        'HOST': 'localhost',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
+
+# WTF
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'Doodle',
+#         'USER': 'postgres', 
+          
+#  # Read from environment variable
+#         'PASSWORD': 'Sabi@1221',   # Read from environment variable
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
 }
 
 
