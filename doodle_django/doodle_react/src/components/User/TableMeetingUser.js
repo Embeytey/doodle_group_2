@@ -31,8 +31,8 @@ const TableMeetingUser = ({
     ? data["time_slots"]
     : [];
 
-  // console.log("Data:", data);
-  console.log("Time Slots:", data["time_slots"]);
+  console.log("Data:", data);
+  //console.log("Time Slots:", data["time_slots"]);
   const handleCheckboxToggle = (index) => {
     if (!viewList) {
       setCheckboxValues((prevValues) => {

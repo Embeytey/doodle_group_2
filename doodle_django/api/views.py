@@ -212,7 +212,7 @@ class VoteViewSet(viewsets.ModelViewSet):
         }
         if time slot does not exists, it gets created by this api.
         '''
-        link_token = request.data.get("link_token")
+        link_token = request.data.get("link_token", request.query_params.get("link_token"))
         votes_data = request.data.get("votes", [])
 
         if link_token is None:

@@ -134,7 +134,7 @@ const User = ({ news, data }) => {
               </div>
             </div>
             <div style={{ paddingTop: 30 }}>
-              <Preference />
+              <Preference data={data} />
             </div>
           </Grid>
           <Grid className="dx_news" item xs={2}>

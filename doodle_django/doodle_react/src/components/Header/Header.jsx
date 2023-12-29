@@ -46,7 +46,7 @@ const getUserInfo = () => {
 
 const Header = () => {
   const navigationbuttonhadler = () => {
-    console.log("Market Clicked");
+    // console.log("Market Clicked");
   };
   const headerRef = useRef(null);
 
@@ -60,8 +60,8 @@ const Header = () => {
       ) {
         if (headerRef.current) { // Add this conditional check
           headerRef.current.classList?.add("header__shrink", null);
-          console.log(headerRef); // Log the object to the console
-          console.log(headerRef.classList); // Try to access classList
+          // console.log(headerRef); // Log the object to the console
+          // console.log(headerRef.classList); // Try to access classList
         }
       } else {
         if (headerRef.current) { // Add this conditional check

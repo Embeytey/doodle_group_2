@@ -18,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 import { WindowSharp } from "@mui/icons-material";
 
 const PreferenceVoteContainer = ({ news, data }) => {
-  const getToken = () => sessionStorage.getItem("token");
 
   const [showYourPreference, setShowYourPreference] = useState(false);
   const [errorDate, setErrorDate] = useState(false);
@@ -41,8 +40,6 @@ const PreferenceVoteContainer = ({ news, data }) => {
     setSelectedDates([]);
   };
 
-  let navigate = useNavigate();
-
   const [selectedDates, setSelectedDates] = useState([]);
 
   const handleApi = async (e) => {
@@ -60,56 +57,32 @@ const PreferenceVoteContainer = ({ news, data }) => {
       const endDate = newDate.toISOString().split("T")[0];
       const endTime = selectedDates[i].timeRange[1];
       const endDateTime = `${endDate}T${endTime}:00`;
-      array_time_slots.push({
-        start_date: startDateTime,
-        end_date: endDateTime,
+      array_time_slots.push(
+      {
+        preference: "YES",
+        time_slot: {
+          start_date: startDateTime,
+          end_date: endDateTime
+        }
       });
     }
-    if (array_time_slots && data.timeslots) {
-      const newArray = [];
 
-      for (let i = 0; i < array_time_slots.length; ++i) {
-        let shouldAdd = true;
-
-        for (let j = 0; j < data.timeslots.length; ++j) {
-          if (
-            data.timeslots[j].start_date.startsWith(
-              array_time_slots[i].start_date
-            ) &&
-            data.timeslots[j].end_date.startsWith(array_time_slots[i].end_date)
-          ) {
-            shouldAdd = false;
-            break;
-          }
-        }
-
-        if (shouldAdd) {
-          newArray.push(array_time_slots[i]);
-        }
-      }
-
-      array_time_slots = newArray;
+    const payload = {
+      link_token : data.link_token,
+      votes: array_time_slots
     }
-
-    // console.log("timeslots", array_time_slots);
-    // console.log("Timeslot", selectedDates);
-    try {
-      if (array_time_slots.length >= 0) {
-        await axios.post(
-          "http://127.0.0.1:8000/api/meeting/" + data["id"] + "/timeslots/",
-          {
-            timeslots: array_time_slots,
-          },
-          {
-            headers: {
-              authorization: `Token ${getToken()}`,
-            },
+    console.log("payload", payload);
+    console.log("data", data);
+    if (array_time_slots.length >= 0) {
+      axios.post("http://127.0.0.1:8000/api/votes/", payload)
+        .then(response => {
+            // window.location.reload();
+            deleteFields();
           }
-        );
-      }
-      window.location.reload();
-      deleteFields();
-    } catch (e) {}
+        ).catch(error => {
+          console.log(error);
+        });
+    }
   };
 
   const buttonSendYourPreference = (e) => {
