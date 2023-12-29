@@ -9,6 +9,8 @@ import PrimaryButton from "../Utils/PrimaryButton";
 import "../CreationMeeting/createGroup.css";
 import "../CreationMeeting/createGroupPolly.css";
 import "../ManageMeeting/manage.css";
+import "../Utils/CopyableLink";
+import CopyableLink from "../Utils/CopyableLink";
 
 const ManageMeetingContainer = ({ data }) => {
 
@@ -89,6 +91,14 @@ const ManageMeetingContainer = ({ data }) => {
           </Grid>
           <Grid className="dx_news" item xs={3}>
             {/* <News news={news} start={3} numberOfDivsNews={6} /> */}
+          </Grid>
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid paddingRight="1vw">
+              <p>Share this link with partecipants to let them vote!</p>
+            </Grid>
+            <Grid>
+              {data && <CopyableLink path={ 'user/' + data.link_token} />}
+            </Grid>
           </Grid>
         </Grid>
       </Box>
