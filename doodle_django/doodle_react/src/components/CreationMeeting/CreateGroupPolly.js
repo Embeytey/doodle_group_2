@@ -9,9 +9,9 @@ import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import TimePicker from "react-time-picker";
-import "react-time-picker/dist/TimePicker.css";
 import PrimaryButton from "../Utils/PrimaryButton.js";
-
+import "react-time-picker/dist/TimePicker.css";
+import "react-clock/dist/Clock.css";
 const CreateGroupPolly = ({ news }) => {
   const [selectedDates, setSelectedDates] = useState([]);
   const [selectedTimeRange, setSelectedTimeRange] = useState([
@@ -282,6 +282,7 @@ const CreateGroupPolly = ({ news }) => {
                         onChange={(time) => handleTimeChange(time, 0)}
                         value={selectedTimeRange[0]}
                         className="custom-time-picker"
+                        ampm={false}
                       />
                       <p>Start Time: {selectedTimeRange[0]}</p>
                     </div>

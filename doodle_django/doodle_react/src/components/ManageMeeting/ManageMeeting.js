@@ -143,7 +143,7 @@ const ManageMeeting = ({ data }) => {
                         <nobr>{data["description"]}</nobr>
                       </div>
                     )}
-                    {/* Add other properties as needed */}
+                    
                   </>
                 )}
               </>

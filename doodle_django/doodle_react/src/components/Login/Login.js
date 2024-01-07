@@ -52,8 +52,9 @@ const Login = () => {
         navigate("/", { state: { loggedInUser } });
       }
     } catch (error) {
-      alert(error.response.data.password1[1]);
       console.log(error);
+
+      alert(error.response.data.non_field_errors);
     }
   };
 
@@ -69,7 +70,7 @@ const Login = () => {
     setData({ ...data, [name]: value });
   };
 
-  const btnstyle = { margin: "8px 0px" };
+  const btnstyle = { margin: "8px 0px", background: "#d1c3bb" };
   return (
     <div className="login">
       <h2> Login for Doodle Unical</h2>
@@ -87,24 +88,24 @@ const Login = () => {
       >
         <Box sx={{ m: "1rem" }} />
         <TextField
+          required
           label="Username"
           placeholder="Enter username"
           variant="outlined"
           fullWidth
-          required
           name="username"
           value={data.username}
           onChange={handleInputChange}
         />
         <Box sx={{ m: "2rem" }} />
         <TextField
+          required
           label="Password"
           name="password"
           placeholder="Enter password"
           type="password"
           variant="outlined"
           fullWidth
-          required
           value={data.password}
           onChange={handleInputChange}
         />
@@ -112,7 +113,6 @@ const Login = () => {
         <div style={{ mx: 100 }}>
           <Button
             type="submit"
-            color="grey"
             variant="contained"
             size="large"
             fullWidth

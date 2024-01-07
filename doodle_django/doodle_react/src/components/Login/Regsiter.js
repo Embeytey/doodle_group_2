@@ -16,7 +16,7 @@ const Register = () => {
   });
 
   const handleSubmitRegister = async () => {
-    console.log(data);
+    // console.log(data);
     try {
       const response = await axios.post(
         `http://127.0.0.1:8000/api/auth/registration/`,
@@ -27,26 +27,26 @@ const Register = () => {
           },
         }
       );
-      console.log(response);
+      // console.log(response);
       navigate("/dashboard");
 
       sessionStorage.setItem("key", response.data.key);
-      console.log(response.data.key);
+      // console.log(response.data.key);
 
-      console.log(response);
+      // console.log(response);
     } catch (error) {
-      console.log(error);
+      console.log("Error object:", error);
       alert(error.response.data.non_field_errors);
     }
   };
 
   const handleInputChange = (e) => {
-    console.log(e.target.name);
+    // console.log(e.target.name);
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
   };
 
-  const btnstyle = { margin: "8px 0px" };
+  const btnstyle = { margin: "8px 0px", background: "#d1c3bb" };
   return (
     <div className="login">
       <h2>Register to book appointment</h2>
@@ -112,8 +112,7 @@ const Register = () => {
         <div style={{ mx: 100 }}>
           <Button
             type="submit"
-            color="grey"
-            variant="outlined"
+            variant="contained"
             size="large"
             fullWidth
             style={btnstyle}

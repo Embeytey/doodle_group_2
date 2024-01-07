@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import "./header.css";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import Unical from "../images/logo.png";
 
 const NAV__LINKS = [
@@ -10,14 +10,14 @@ const NAV__LINKS = [
   },
   {
     display: "logout",
-    url: "/",
+    url: "/logout",
   },
 ];
 
 const Header = () => {
   const headerRef = useRef(null);
-
   const menuRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -25,9 +25,9 @@ const Header = () => {
         document.body.scrollTop > 80 ||
         document.documentElement.scrollTop > 80
       ) {
-        headerRef.current.classList?.add("header__shrink", null);
+        headerRef.current?.classList.add("header__shrink");
       } else {
-        headerRef.current.classList?.remove("header__shrink", null);
+        headerRef.current?.classList.remove("header__shrink");
       }
     });
 
@@ -37,6 +37,14 @@ const Header = () => {
   }, []);
 
   const toggleMenu = () => menuRef.current.classList.toggle("active__menu");
+
+  const handleLogout = () => {
+    // Clear session token
+    sessionStorage.removeItem("token");
+
+    // Redirect to home page
+    navigate("/");
+  };
 
   return (
     <header className="header" ref={headerRef}>
@@ -63,6 +71,7 @@ const Header = () => {
                     className={(navClass) =>
                       navClass.isActive ? "active" : ""
                     }
+                    onClick={item.url === "/logout" ? handleLogout : null}
                   >
                     {item.display}
                   </NavLink>
@@ -73,7 +82,7 @@ const Header = () => {
 
           <div className="nav__right d-flex align-items-center gap-5 ">
             <span className="mobile__menu">
-              <i class="ri-menu-line" onClick={toggleMenu}></i>
+              <i className="ri-menu-line" onClick={toggleMenu}></i>
             </span>
           </div>
         </div>
